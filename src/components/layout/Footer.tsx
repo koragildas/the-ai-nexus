@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const Footer = () => {
   return (
@@ -18,10 +19,10 @@ export const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Navigation</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Accueil</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Catégories</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Populaires</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Nouveautés</a></li>
+              <li><Link to="/" className="hover:text-white transition-colors">Accueil</Link></li>
+              <li><Link to="/categories" className="hover:text-white transition-colors">Catégories</Link></li>
+              <li><Link to="/populaires" className="hover:text-white transition-colors">Populaires</Link></li>
+              <li><Link to="/soumettre" className="hover:text-white transition-colors">Soumettre un outil</Link></li>
             </ul>
           </div>
           
@@ -31,7 +32,7 @@ export const Footer = () => {
               <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
               <li><a href="#" className="hover:text-white transition-colors">À propos</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Mentions légales</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Soumettre un outil</a></li>
+              <li><Link to="/publicite" className="hover:text-white transition-colors">Publicité</Link></li>
             </ul>
           </div>
         </div>

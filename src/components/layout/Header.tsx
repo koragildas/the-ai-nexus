@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Search, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,9 +15,11 @@ export const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                AI Nexus
-              </h1>
+              <Link to="/">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  AI Nexus
+                </h1>
+              </Link>
             </div>
           </div>
 
@@ -34,10 +37,10 @@ export const Header = () => {
 
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Accueil</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Catégories</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Populaires</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Soumettre un outil</a>
+            <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">Accueil</Link>
+            <Link to="/categories" className="text-gray-700 hover:text-blue-600 transition-colors">Catégories</Link>
+            <Link to="/populaires" className="text-gray-700 hover:text-blue-600 transition-colors">Populaires</Link>
+            <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors">Soumettre un outil</Link>
           </nav>
 
           {/* Mobile menu button */}
@@ -67,10 +70,10 @@ export const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden pb-4">
             <nav className="flex flex-col space-y-2">
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Accueil</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Catégories</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Populaires</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Soumettre un outil</a>
+              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Accueil</Link>
+              <Link to="/categories" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Catégories</Link>
+              <Link to="/populaires" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Populaires</Link>
+              <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Soumettre un outil</Link>
             </nav>
           </div>
         )}
