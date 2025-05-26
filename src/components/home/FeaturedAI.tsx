@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Star, ExternalLink, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -7,6 +8,7 @@ const featuredTools = [
   {
     id: 1,
     name: 'ChatGPT',
+    slug: 'chatgpt',
     description: 'Assistant IA conversationnel polyvalent pour l\'écriture, l\'analyse et la résolution de problèmes.',
     category: 'Écriture',
     rating: 4.8,
@@ -18,6 +20,7 @@ const featuredTools = [
   {
     id: 2,
     name: 'Midjourney',
+    slug: 'midjourney',
     description: 'Générateur d\'images IA de haute qualité à partir de descriptions textuelles.',
     category: 'Image',
     rating: 4.9,
@@ -29,6 +32,7 @@ const featuredTools = [
   {
     id: 3,
     name: 'GitHub Copilot',
+    slug: 'github-copilot',
     description: 'Assistant de programmation IA qui aide les développeurs à écrire du code plus rapidement.',
     category: 'Code',
     rating: 4.7,
@@ -113,10 +117,12 @@ export const FeaturedAI = () => {
                   </div>
                 </div>
 
-                <Button className="w-full group-hover:bg-blue-600 transition-colors">
-                  Découvrir
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
+                <Link to={`/outil/${tool.slug}`}>
+                  <Button className="w-full group-hover:bg-blue-600 transition-colors">
+                    Découvrir
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
             </div>
           ))}

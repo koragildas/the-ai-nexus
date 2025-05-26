@@ -10,6 +10,7 @@ import CategoryDetail from "./pages/CategoryDetail";
 import Popular from "./pages/Popular";
 import SubmitTool from "./pages/SubmitTool";
 import Advertise from "./pages/Advertise";
+import AIToolDetail from "./pages/AIToolDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/populaires" element={<Popular />} />
           <Route path="/soumettre" element={<SubmitTool />} />
           <Route path="/publicite" element={<Advertise />} />
+          <Route path="/outil/:toolSlug" element={<AIToolDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
