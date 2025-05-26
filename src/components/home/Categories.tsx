@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { 
   PenTool, 
   Image, 
@@ -14,6 +15,7 @@ import {
 const categories = [
   {
     name: 'Écriture',
+    slug: 'ecriture',
     icon: PenTool,
     count: 125,
     color: 'bg-blue-500',
@@ -21,6 +23,7 @@ const categories = [
   },
   {
     name: 'Image',
+    slug: 'image',
     icon: Image,
     count: 89,
     color: 'bg-purple-500',
@@ -28,6 +31,7 @@ const categories = [
   },
   {
     name: 'Vidéo',
+    slug: 'video',
     icon: Video,
     count: 67,
     color: 'bg-green-500',
@@ -35,6 +39,7 @@ const categories = [
   },
   {
     name: 'Code',
+    slug: 'code',
     icon: Code,
     count: 156,
     color: 'bg-orange-500',
@@ -42,6 +47,7 @@ const categories = [
   },
   {
     name: 'Business',
+    slug: 'business',
     icon: Briefcase,
     count: 78,
     color: 'bg-red-500',
@@ -49,6 +55,7 @@ const categories = [
   },
   {
     name: 'Éducation',
+    slug: 'education',
     icon: GraduationCap,
     count: 45,
     color: 'bg-indigo-500',
@@ -56,6 +63,7 @@ const categories = [
   },
   {
     name: 'Audio',
+    slug: 'audio',
     icon: Music,
     count: 34,
     color: 'bg-pink-500',
@@ -63,6 +71,7 @@ const categories = [
   },
   {
     name: 'Chatbots',
+    slug: 'chatbots',
     icon: MessageSquare,
     count: 92,
     color: 'bg-teal-500',
@@ -87,9 +96,10 @@ export const Categories = () => {
           {categories.map((category) => {
             const IconComponent = category.icon;
             return (
-              <div
+              <Link
                 key={category.name}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                to={`/categorie/${category.slug}`}
+                className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer group block"
               >
                 <div className={`${category.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <IconComponent className="h-6 w-6 text-white" />
@@ -103,7 +113,7 @@ export const Categories = () => {
                 <div className="text-sm font-medium text-blue-600">
                   {category.count} outils
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
