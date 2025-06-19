@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { SocialShare } from '@/components/SocialShare';
 import { 
   Star, 
   ExternalLink, 
@@ -287,7 +288,6 @@ const AIToolDetailPage = () => {
                 </CardContent>
               </Card>
 
-              {/* Fonctionnalités */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -307,7 +307,6 @@ const AIToolDetailPage = () => {
                 </CardContent>
               </Card>
 
-              {/* Avantages et inconvénients */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
@@ -342,7 +341,6 @@ const AIToolDetailPage = () => {
                 </Card>
               </div>
 
-              {/* Cas d'usage */}
               <Card>
                 <CardHeader>
                   <CardTitle>Cas d'usage populaires</CardTitle>
@@ -405,6 +403,20 @@ const AIToolDetailPage = () => {
                       <p className="font-medium text-gray-900">{price}</p>
                     </div>
                   ))}
+                </CardContent>
+              </Card>
+
+              {/* Partage social */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Partager cet outil</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <SocialShare
+                    url={window.location.href}
+                    title={tool.name}
+                    description={tool.description}
+                  />
                 </CardContent>
               </Card>
 

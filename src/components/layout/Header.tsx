@@ -1,12 +1,39 @@
 
-import React, { useState } from 'react';
-import { Search, Menu, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Menu, X, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const authStatus = localStorage.getItem('isAuthenticated');
+    const userData = localStorage.getItem('user');
+    
+    if (authStatus === 'true' && userData) {
+      setIsAuthenticated(true);
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    setUser(null);
+    toast({
+      title: "Déconnexion réussie",
+      description: "À bientôt !",
+    });
+    navigate('/');
+  };
 
   return (
     <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
@@ -36,11 +63,32 @@ export const Header = () => {
           </div>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-8 items-center">
             <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">Accueil</Link>
             <Link to="/categories" className="text-gray-700 hover:text-blue-600 transition-colors">Catégories</Link>
             <Link to="/populaires" className="text-gray-700 hover:text-blue-600 transition-colors">Populaires</Link>
-            <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors">Soumettre un outil</Link>
+            
+            {isAuthenticated ? (
+              <>
+                <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors">Soumettre un outil</Link>
+                <Link to="/dashboard">
+                  <Button variant="outline" size="sm">
+                    <User className="mr-2 h-4 w-4" />
+                    {user?.name}
+                  </Button>
+                </Link>
+                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button size="sm">
+                  <User className="mr-2 h-4 w-4" />
+                  Connexion
+                </Button>
+              </Link>
+            )}
           </nav>
 
           {/* Mobile menu button */}
@@ -73,7 +121,18 @@ export const Header = () => {
               <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Accueil</Link>
               <Link to="/categories" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Catégories</Link>
               <Link to="/populaires" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Populaires</Link>
-              <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Soumettre un outil</Link>
+              
+              {isAuthenticated ? (
+                <>
+                  <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Soumettre un outil</Link>
+                  <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Tableau de bord</Link>
+                  <button onClick={handleLogout} className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left">
+                    Déconnexion
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Connexion</Link>
+              )}
             </nav>
           </div>
         )}

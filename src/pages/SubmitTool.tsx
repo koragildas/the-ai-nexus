@@ -1,5 +1,5 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const SubmitToolPage = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -21,6 +22,18 @@ const SubmitToolPage = () => {
     pricing: '',
     language: 'Français'
   });
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (!isAuthenticated) {
+      toast({
+        title: "Connexion requise",
+        description: "Vous devez être connecté pour soumettre un outil.",
+        variant: "destructive"
+      });
+      navigate('/login');
+    }
+  }, [navigate, toast]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
