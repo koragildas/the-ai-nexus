@@ -29,9 +29,9 @@ export const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
               <li><Link to="/a-propos" className="hover:text-white transition-colors">À propos</Link></li>
-              <li><a href="#" className="hover:text-white transition-colors">Mentions légales</a></li>
+              <li><Link to="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link></li>
               <li><Link to="/publicite" className="hover:text-white transition-colors">Publicité</Link></li>
             </ul>
           </div>
