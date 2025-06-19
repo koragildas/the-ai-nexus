@@ -194,26 +194,43 @@ const AdvertisePage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {packages.map((pkg, index) => (
-                <Card key={index} className={`relative ${pkg.popular ? 'border-blue-500 shadow-lg scale-105' : ''}`}>
+                <Card 
+                  key={index} 
+                  className={`relative transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group ${
+                    pkg.popular 
+                      ? 'border-blue-500 shadow-lg scale-105 hover:scale-110' 
+                      : 'hover:border-blue-300 hover:scale-105'
+                  }`}
+                >
                   {pkg.popular && (
-                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500">
+                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 group-hover:bg-blue-600 transition-colors duration-300">
                       Plus populaire
                     </Badge>
                   )}
                   <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">{pkg.name}</CardTitle>
-                    <CardDescription>{pkg.description}</CardDescription>
+                    <CardTitle className="text-2xl group-hover:text-blue-600 transition-colors duration-300">
+                      {pkg.name}
+                    </CardTitle>
+                    <CardDescription className="group-hover:text-gray-700 transition-colors duration-300">
+                      {pkg.description}
+                    </CardDescription>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold text-gray-900">{pkg.price}</span>
-                      <span className="text-gray-600">{pkg.period}</span>
+                      <span className="text-4xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                        {pkg.price}
+                      </span>
+                      <span className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                        {pkg.period}
+                      </span>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="group-hover:bg-gray-50/50 transition-colors duration-300 rounded-b-lg">
                     <ul className="space-y-3">
                       {pkg.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-700">{feature}</span>
+                          <CheckCircle className="h-5 w-5 text-green-500 group-hover:text-green-600 mr-3 flex-shrink-0 mt-0.5 transition-colors duration-300" />
+                          <span className="text-gray-700 group-hover:text-gray-800 transition-colors duration-300">
+                            {feature}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -222,7 +239,14 @@ const AdvertisePage = () => {
                       price={pkg.price}
                       features={pkg.features}
                     >
-                      <Button className="w-full mt-6" variant={pkg.popular ? "default" : "outline"}>
+                      <Button 
+                        className={`w-full mt-6 transition-all duration-300 ${
+                          pkg.popular 
+                            ? 'group-hover:bg-blue-700 group-hover:shadow-lg' 
+                            : 'group-hover:bg-primary/90 group-hover:shadow-lg'
+                        }`} 
+                        variant={pkg.popular ? "default" : "outline"}
+                      >
                         Choisir cette formule
                       </Button>
                     </SubscriptionCheckout>
