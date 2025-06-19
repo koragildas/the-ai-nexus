@@ -138,7 +138,7 @@ const Dashboard = () => {
                 <div className="text-2xl font-bold">{stats.views}</div>
                 <p className="text-xs text-muted-foreground">+12% ce mois</p>
               </CardContent>
-            </Car>
+            </Card>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
