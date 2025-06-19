@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { UserSettings } from '@/components/UserSettings';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +13,6 @@ import {
   Heart, 
   PlusCircle, 
   BarChart3, 
-  Settings,
   ExternalLink,
   TrendingUp,
   Calendar,
@@ -40,6 +40,10 @@ const Dashboard = () => {
 
     setUser(JSON.parse(userData));
   }, [navigate]);
+
+  const handleUserUpdate = (updatedUser: any) => {
+    setUser(updatedUser);
+  };
 
   const favoriteTools = [
     { name: 'ChatGPT', category: 'Écriture', rating: 4.8, slug: 'chatgpt' },
@@ -84,10 +88,7 @@ const Dashboard = () => {
                       Soumettre un outil
                     </Button>
                   </Link>
-                  <Button variant="outline">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Paramètres
-                  </Button>
+                  <UserSettings user={user} onUserUpdate={handleUserUpdate} />
                 </div>
               </div>
             </div>
@@ -137,7 +138,7 @@ const Dashboard = () => {
                 <div className="text-2xl font-bold">{stats.views}</div>
                 <p className="text-xs text-muted-foreground">+12% ce mois</p>
               </CardContent>
-            </Card>
+            </Car>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

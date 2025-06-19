@@ -2,6 +2,8 @@
 import React from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { CallScheduler } from '@/components/CallScheduler';
+import { SubscriptionCheckout } from '@/components/SubscriptionCheckout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -62,6 +64,14 @@ const AdvertisePage = () => {
     }
   ];
 
+  const handleEmailClick = () => {
+    window.location.href = 'mailto:publicite@ainexus.fr?subject=Demande d\'information publicitaire&body=Bonjour,%0D%0A%0D%0AJe souhaiterais obtenir plus d\'informations sur vos solutions publicitaires.%0D%0A%0D%0ACordialement';
+  };
+
+  const handlePhoneClick = () => {
+    window.location.href = 'tel:+33123456789';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Header />
@@ -87,7 +97,11 @@ const AdvertisePage = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                onClick={handleEmailClick}
+              >
                 Commencer maintenant
                 <Mail className="ml-2 h-4 w-4" />
               </Button>
@@ -203,9 +217,15 @@ const AdvertisePage = () => {
                         </li>
                       ))}
                     </ul>
-                    <Button className="w-full mt-6" variant={pkg.popular ? "default" : "outline"}>
-                      Choisir cette formule
-                    </Button>
+                    <SubscriptionCheckout
+                      packageName={pkg.name}
+                      price={pkg.price}
+                      features={pkg.features}
+                    >
+                      <Button className="w-full mt-6" variant={pkg.popular ? "default" : "outline"}>
+                        Choisir cette formule
+                      </Button>
+                    </SubscriptionCheckout>
                   </CardContent>
                 </Card>
               ))}
@@ -225,20 +245,22 @@ const AdvertisePage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div className="text-center">
-                <Mail className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <h3 className="font-semibold mb-1">Email</h3>
-                <p className="text-gray-600">publicite@ainexus.fr</p>
+                <button onClick={handleEmailClick} className="group">
+                  <Mail className="h-8 w-8 text-blue-600 mx-auto mb-2 group-hover:text-blue-700 transition-colors" />
+                  <h3 className="font-semibold mb-1 group-hover:text-blue-700 transition-colors">Email</h3>
+                  <p className="text-gray-600 group-hover:text-blue-600 transition-colors">publicite@ainexus.fr</p>
+                </button>
               </div>
               <div className="text-center">
-                <Phone className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <h3 className="font-semibold mb-1">Téléphone</h3>
-                <p className="text-gray-600">+33 1 23 45 67 89</p>
+                <button onClick={handlePhoneClick} className="group">
+                  <Phone className="h-8 w-8 text-blue-600 mx-auto mb-2 group-hover:text-blue-700 transition-colors" />
+                  <h3 className="font-semibold mb-1 group-hover:text-blue-700 transition-colors">Téléphone</h3>
+                  <p className="text-gray-600 group-hover:text-blue-600 transition-colors">+33 1 23 45 67 89</p>
+                </button>
               </div>
             </div>
 
-            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-              Planifier un appel
-            </Button>
+            <CallScheduler />
           </div>
         </section>
       </main>

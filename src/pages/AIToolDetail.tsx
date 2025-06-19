@@ -3,187 +3,102 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { SocialShare } from '@/components/SocialShare';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
+  ArrowLeft, 
   Star, 
   ExternalLink, 
-  Users, 
-  DollarSign, 
-  Globe, 
-  Shield, 
-  Zap, 
-  Heart,
-  ArrowLeft,
-  CheckCircle,
-  XCircle
+  Heart, 
+  Bookmark,
+  Users,
+  Calendar,
+  Globe,
+  Zap
 } from 'lucide-react';
 
-// Données détaillées des outils IA
-const aiToolsData = {
-  'chatgpt': {
-    id: 1,
-    name: 'ChatGPT',
-    description: 'Assistant IA conversationnel polyvalent développé par OpenAI, capable de comprendre et générer du texte dans de nombreuses langues.',
-    longDescription: 'ChatGPT est un modèle de langage conversationnel qui utilise l\'apprentissage automatique pour produire du texte semblable à celui d\'un humain. Il peut aider avec l\'écriture, l\'analyse, la programmation, la traduction, et bien plus encore.',
-    category: 'Écriture',
-    rating: 4.8,
-    reviews: 15240,
-    price: 'Freemium',
-    website: 'https://chatgpt.com',
-    languages: ['Français', 'Anglais', 'Espagnol', 'Plus de 50 langues'],
-    features: [
-      'Conversation naturelle',
-      'Génération de contenu',
-      'Assistance à la programmation',
-      'Traduction de langues',
-      'Analyse de documents',
-      'Résolution de problèmes mathématiques'
-    ],
-    pros: [
-      'Interface intuitive et facile à utiliser',
-      'Réponses de haute qualité',
-      'Support multilingue excellent',
-      'Mise à jour régulière du modèle',
-      'API disponible pour les développeurs'
-    ],
-    cons: [
-      'Limitations dans la version gratuite',
-      'Peut générer des informations incorrectes',
-      'Connaissance limitée aux données d\'entraînement',
-      'Coût élevé pour un usage intensif'
-    ],
-    useCases: [
-      'Rédaction d\'articles et blogs',
-      'Assistance au développement',
-      'Traduction de documents',
-      'Génération d\'idées créatives',
-      'Support client automatisé',
-      'Aide aux devoirs et recherches'
-    ],
-    pricing: {
-      free: 'Accès limité avec GPT-3.5',
-      paid: '20€/mois pour ChatGPT Plus (GPT-4)'
-    },
-    company: 'OpenAI',
-    founded: '2022',
-    users: '100M+'
-  },
-  'midjourney': {
-    id: 2,
-    name: 'Midjourney',
-    description: 'Générateur d\'images IA révolutionnaire qui crée des œuvres d\'art à partir de descriptions textuelles.',
-    longDescription: 'Midjourney est un programme d\'intelligence artificielle qui génère des images à partir de descriptions textuelles. Il est particulièrement reconnu pour sa capacité à créer des œuvres d\'art de style artistique et fantastique.',
-    category: 'Image',
-    rating: 4.9,
-    reviews: 8950,
-    price: 'Payant',
-    website: 'https://midjourney.com',
-    languages: ['Anglais', 'Français (partiel)'],
-    features: [
-      'Génération d\'images haute résolution',
-      'Styles artistiques variés',
-      'Commandes Discord intégrées',
-      'Modes de qualité ajustables',
-      'Variations d\'images',
-      'Outpainting et inpainting'
-    ],
-    pros: [
-      'Qualité artistique exceptionnelle',
-      'Interface Discord familière',
-      'Communauté active et créative',
-      'Mises à jour fréquentes',
-      'Résultats impressionnants'
-    ],
-    cons: [
-      'Pas de version gratuite',
-      'Interface uniquement sur Discord',
-      'Temps d\'attente en heures de pointe',
-      'Contrôle limité sur le résultat final'
-    ],
-    useCases: [
-      'Création d\'illustrations',
-      'Concept art pour jeux vidéo',
-      'Designs pour réseaux sociaux',
-      'Art numérique personnel',
-      'Prototypage visuel',
-      'Inspiration créative'
-    ],
-    pricing: {
-      basic: '10$/mois - Plan Basic',
-      standard: '30$/mois - Plan Standard',
-      pro: '60$/mois - Plan Pro'
-    },
-    company: 'Midjourney Inc.',
-    founded: '2021',
-    users: '15M+'
-  },
-  'github-copilot': {
-    id: 3,
-    name: 'GitHub Copilot',
-    description: 'Assistant de programmation IA qui aide les développeurs à écrire du code plus rapidement et efficacement.',
-    longDescription: 'GitHub Copilot est un assistant de programmation alimenté par l\'IA qui suggère du code et des fonctions entières en temps réel, directement depuis votre éditeur.',
-    category: 'Code',
-    rating: 4.7,
-    reviews: 12340,
-    price: 'Payant',
-    website: 'https://github.com/features/copilot',
-    languages: ['Tous les langages de programmation'],
-    features: [
-      'Autocomplétion de code intelligente',
-      'Génération de fonctions complètes',
-      'Support multi-langages',
-      'Intégration IDE native',
-      'Suggestions contextuelles',
-      'Documentation automatique'
-    ],
-    pros: [
-      'Intégration parfaite avec VS Code',
-      'Améliore significativement la productivité',
-      'Suggestions de haute qualité',
-      'Apprentissage continu',
-      'Support excellent des frameworks populaires'
-    ],
-    cons: [
-      'Abonnement payant requis',
-      'Peut générer du code sous-optimal',
-      'Dépendance potentielle',
-      'Problèmes de confidentialité du code'
-    ],
-    useCases: [
-      'Développement web frontend/backend',
-      'Scripts d\'automatisation',
-      'Prototypage rapide',
-      'Apprentissage de nouveaux langages',
-      'Refactoring de code',
-      'Génération de tests unitaires'
-    ],
-    pricing: {
-      individual: '10$/mois - Usage individuel',
-      business: '19$/mois/utilisateur - Équipes'
-    },
-    company: 'GitHub (Microsoft)',
-    founded: '2021',
-    users: '5M+'
-  }
-};
-
-const AIToolDetailPage = () => {
+const AIToolDetail = () => {
   const { toolSlug } = useParams();
-  const tool = aiToolsData[toolSlug as keyof typeof aiToolsData];
 
-  if (!tool) {
+  // Simulation des données d'outil IA
+  const toolData = {
+    'chatgpt': {
+      name: 'ChatGPT',
+      category: 'Écriture',
+      description: 'ChatGPT est un modèle de langage IA développé par OpenAI qui peut converser, répondre aux questions et aider dans diverses tâches de rédaction.',
+      longDescription: 'ChatGPT (Chat Generative Pre-trained Transformer) est un chatbot IA lancé par OpenAI en novembre 2022. Il est basé sur la famille de modèles de langage GPT-3.5 et GPT-4 d\'OpenAI et a été affiné à l\'aide de techniques d\'apprentissage supervisé et par renforcement.',
+      rating: 4.8,
+      users: '100M+',
+      website: 'https://chat.openai.com',
+      pricing: 'Freemium',
+      features: [
+        'Conversations naturelles en temps réel',
+        'Génération de contenu créatif',
+        'Assistance à la programmation',
+        'Traduction multilingue',
+        'Analyse et résumé de textes',
+        'Aide aux devoirs et recherches'
+      ],
+      pros: [
+        'Interface utilisateur intuitive',
+        'Réponses très cohérentes',
+        'Large base de connaissances',
+        'Gratuit avec limitations'
+      ],
+      cons: [
+        'Informations parfois obsolètes',
+        'Peut générer du contenu inexact',
+        'Limitations dans la version gratuite'
+      ]
+    },
+    'midjourney': {
+      name: 'Midjourney',
+      category: 'Image',
+      description: 'Midjourney est un programme d\'intelligence artificielle qui génère des images à partir de descriptions textuelles.',
+      longDescription: 'Midjourney est un laboratoire de recherche indépendant qui produit un programme d\'intelligence artificielle du même nom qui crée des images à partir de descriptions textuelles, similaire aux DALL-E d\'OpenAI et au Stable Diffusion.',
+      rating: 4.9,
+      users: '15M+',
+      website: 'https://midjourney.com',
+      pricing: 'Payant',
+      features: [
+        'Génération d\'images haute qualité',
+        'Styles artistiques variés',
+        'Interface Discord intégrée',
+        'Modes de rendu avancés',
+        'Upscaling et variations',
+        'Communauté active'
+      ],
+      pros: [
+        'Qualité d\'image exceptionnelle',
+        'Grande créativité artistique',
+        'Communauté très active',
+        'Mises à jour régulières'
+      ],
+      cons: [
+        'Uniquement via Discord',
+        'Pas de version gratuite',
+        'Courbe d\'apprentissage'
+      ]
+    }
+  };
+
+  const currentTool = toolData[toolSlug as keyof typeof toolData];
+
+  if (!currentTool) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
         <Header />
         <main className="py-16">
           <div className="max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Outil non trouvé</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Outil non trouvé</h1>
             <p className="text-gray-600 mb-8">L'outil demandé n'existe pas.</p>
             <Link to="/">
-              <Button>Retour à l'accueil</Button>
+              <Button>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Retour à l'accueil
+              </Button>
             </Link>
           </div>
         </main>
@@ -198,75 +113,75 @@ const AIToolDetailPage = () => {
       <main className="py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Navigation */}
-          <div className="mb-8">
-            <Link 
-              to="/" 
-              className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Retour à l'accueil
+          <div className="mb-6">
+            <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Retour aux outils
             </Link>
           </div>
 
           {/* En-tête de l'outil */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-            <div className="flex flex-col md:flex-row items-start gap-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-2xl">
-                  {tool.name.charAt(0)}
-                </span>
-              </div>
-              
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
               <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                    {tool.name}
-                  </h1>
-                  <Badge variant="secondary">{tool.category}</Badge>
-                  <Badge variant={tool.price === 'Gratuit' ? 'default' : 'outline'}>
-                    {tool.price}
-                  </Badge>
-                </div>
-                
-                <p className="text-xl text-gray-600 mb-4">{tool.description}</p>
-                
-                <div className="flex flex-wrap items-center gap-6 mb-4">
-                  <div className="flex items-center">
-                    <div className="flex text-yellow-400 mr-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-5 w-5 ${
-                            i < Math.floor(tool.rating) ? 'fill-current' : ''
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="font-medium">{tool.rating}</span>
-                    <span className="text-gray-500 ml-1">
-                      ({tool.reviews.toLocaleString()} avis)
+                <div className="flex items-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-xl">
+                      {currentTool.name.charAt(0)}
                     </span>
                   </div>
-                  
-                  <div className="flex items-center text-gray-600">
-                    <Users className="h-5 w-5 mr-2" />
-                    <span>{tool.users} utilisateurs</span>
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{currentTool.name}</h1>
+                    <div className="flex items-center space-x-4">
+                      <Badge variant="secondary" className="text-sm">
+                        {currentTool.category}
+                      </Badge>
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                        <span className="font-medium">{currentTool.rating}</span>
+                        <span className="text-gray-500 ml-1">(2.5k avis)</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap gap-3">
-                  <Button 
-                    size="lg" 
-                    onClick={() => window.open(tool.website, '_blank')}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    <ExternalLink className="mr-2 h-5 w-5" />
-                    Visiter le site officiel
+                <p className="text-lg text-gray-600 mb-6">
+                  {currentTool.description}
+                </p>
+
+                <div className="flex flex-wrap gap-3 mb-6">
+                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Essayer {currentTool.name}
                   </Button>
-                  <Button variant="outline" size="lg">
-                    <Heart className="mr-2 h-5 w-5" />
+                  <Button variant="outline">
+                    <Heart className="mr-2 h-4 w-4" />
                     Ajouter aux favoris
                   </Button>
+                  <Button variant="outline">
+                    <Bookmark className="mr-2 h-4 w-4" />
+                    Sauvegarder
+                  </Button>
+                </div>
+              </div>
+
+              {/* Statistiques */}
+              <div className="lg:ml-8 lg:flex-shrink-0">
+                <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+                  <div className="text-center lg:text-left">
+                    <div className="flex items-center justify-center lg:justify-start mb-1">
+                      <Users className="h-4 w-4 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-500">Utilisateurs</span>
+                    </div>
+                    <div className="font-bold text-xl">{currentTool.users}</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="flex items-center justify-center lg:justify-start mb-1">
+                      <Globe className="h-4 w-4 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-500">Prix</span>
+                    </div>
+                    <div className="font-bold text-xl">{currentTool.pricing}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -278,28 +193,31 @@ const AIToolDetailPage = () => {
               {/* Description détaillée */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Globe className="mr-2 h-5 w-5" />
-                    Description détaillée
-                  </CardTitle>
+                  <CardTitle>À propos de {currentTool.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 leading-relaxed">{tool.longDescription}</p>
+                  <p className="text-gray-700 leading-relaxed">
+                    {currentTool.longDescription}
+                  </p>
                 </CardContent>
               </Card>
 
+              {/* Fonctionnalités */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Zap className="mr-2 h-5 w-5" />
                     Fonctionnalités principales
                   </CardTitle>
+                  <CardDescription>
+                    Découvrez ce que {currentTool.name} peut faire pour vous
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {tool.features.map((feature, index) => (
-                      <div key={index} className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 flex-shrink-0" />
+                    {currentTool.features.map((feature, index) => (
+                      <div key={index} className="flex items-start">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                         <span className="text-gray-700">{feature}</span>
                       </div>
                     ))}
@@ -307,17 +225,18 @@ const AIToolDetailPage = () => {
                 </CardContent>
               </Card>
 
+              {/* Avantages et Inconvénients */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-green-700">Avantages</CardTitle>
+                    <CardTitle className="text-green-600">Avantages</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
-                      {tool.pros.map((pro, index) => (
+                      {currentTool.pros.map((pro, index) => (
                         <li key={index} className="flex items-start">
-                          <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700 text-sm">{pro}</span>
+                          <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                          <span className="text-gray-700">{pro}</span>
                         </li>
                       ))}
                     </ul>
@@ -326,115 +245,95 @@ const AIToolDetailPage = () => {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-red-700">Inconvénients</CardTitle>
+                    <CardTitle className="text-red-600">Inconvénients</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
-                      {tool.cons.map((con, index) => (
+                      {currentTool.cons.map((con, index) => (
                         <li key={index} className="flex items-start">
-                          <XCircle className="h-4 w-4 text-red-600 mr-2 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700 text-sm">{con}</span>
+                          <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                          <span className="text-gray-700">{con}</span>
                         </li>
                       ))}
                     </ul>
                   </CardContent>
                 </Card>
               </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cas d'usage populaires</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {tool.useCases.map((useCase, index) => (
-                      <div key={index} className="bg-blue-50 p-3 rounded-lg">
-                        <span className="text-blue-800 font-medium">{useCase}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
-            {/* Sidebar */}
+            {/* Barre latérale */}
             <div className="space-y-6">
-              {/* Informations clés */}
+              {/* Informations de l'outil */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Shield className="mr-2 h-5 w-5" />
-                    Informations clés
-                  </CardTitle>
+                  <CardTitle>Informations</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <h4 className="font-semibold text-gray-900">Entreprise</h4>
-                    <p className="text-gray-600">{tool.company}</p>
+                    <div className="text-sm text-gray-500 mb-1">Site web</div>
+                    <a 
+                      href={currentTool.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 flex items-center"
+                    >
+                      {currentTool.website}
+                      <ExternalLink className="ml-1 h-3 w-3" />
+                    </a>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Lancé en</h4>
-                    <p className="text-gray-600">{tool.founded}</p>
+                    <div className="text-sm text-gray-500 mb-1">Catégorie</div>
+                    <Badge variant="secondary">{currentTool.category}</Badge>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Langues supportées</h4>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {tool.languages.map((lang, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {lang}
-                        </Badge>
-                      ))}
-                    </div>
+                    <div className="text-sm text-gray-500 mb-1">Tarification</div>
+                    <div className="font-medium">{currentTool.pricing}</div>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Tarification */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <DollarSign className="mr-2 h-5 w-5" />
-                    Tarification
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {Object.entries(tool.pricing).map(([plan, price]) => (
-                    <div key={plan} className="bg-gray-50 p-3 rounded-lg">
-                      <p className="font-medium text-gray-900">{price}</p>
-                    </div>
-                  ))}
                 </CardContent>
               </Card>
 
               {/* Partage social */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Partager cet outil</CardTitle>
+                  <CardTitle>Partager</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <SocialShare
                     url={window.location.href}
-                    title={tool.name}
-                    description={tool.description}
+                    title={`Découvrez ${currentTool.name}`}
+                    description={currentTool.description}
                   />
                 </CardContent>
               </Card>
 
-              {/* Actions */}
+              {/* Outils similaires */}
               <Card>
-                <CardContent className="pt-6">
+                <CardHeader>
+                  <CardTitle>Outils similaires</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <div className="space-y-3">
-                    <Button 
-                      className="w-full" 
-                      onClick={() => window.open(tool.website, '_blank')}
-                    >
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Essayer maintenant
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                      <Heart className="mr-2 h-4 w-4" />
-                      Sauvegarder
-                    </Button>
+                    {Object.entries(toolData)
+                      .filter(([slug]) => slug !== toolSlug)
+                      .slice(0, 2)
+                      .map(([slug, tool]) => (
+                        <Link key={slug} to={`/outil/${slug}`} className="block">
+                          <div className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
+                              <span className="text-white font-bold text-sm">
+                                {tool.name.charAt(0)}
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-sm">{tool.name}</h4>
+                              <div className="flex items-center">
+                                <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                                <span className="text-xs text-gray-600">{tool.rating}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
                   </div>
                 </CardContent>
               </Card>
@@ -447,4 +346,4 @@ const AIToolDetailPage = () => {
   );
 };
 
-export default AIToolDetailPage;
+export default AIToolDetail;
