@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Input } from '@/components/ui/input';
@@ -9,11 +10,12 @@ import { Search, Brain, Code, MessageSquare, Image, Music, Video, FileText, Calc
 const CategoriesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Données des catégories
+  // Données des catégories avec slugs pour la navigation
   const allCategories = [
     {
       id: 1,
       name: 'Assistant IA',
+      slug: 'assistant-ia',
       description: 'Assistants intelligents pour vous aider dans vos tâches quotidiennes',
       icon: Brain,
       count: 45,
@@ -22,6 +24,7 @@ const CategoriesPage = () => {
     {
       id: 2,
       name: 'Développement',
+      slug: 'developpement',
       description: 'Outils pour développeurs et programmeurs',
       icon: Code,
       count: 32,
@@ -30,6 +33,7 @@ const CategoriesPage = () => {
     {
       id: 3,
       name: 'Rédaction',
+      slug: 'redaction',
       description: 'Génération et amélioration de contenu textuel',
       icon: FileText,
       count: 28,
@@ -38,6 +42,7 @@ const CategoriesPage = () => {
     {
       id: 4,
       name: 'Chat & Communication',
+      slug: 'chat-communication',
       description: 'Chatbots et outils de communication intelligents',
       icon: MessageSquare,
       count: 23,
@@ -46,6 +51,7 @@ const CategoriesPage = () => {
     {
       id: 5,
       name: 'Image & Design',
+      slug: 'image-design',
       description: 'Génération et édition d\'images par IA',
       icon: Image,
       count: 41,
@@ -54,6 +60,7 @@ const CategoriesPage = () => {
     {
       id: 6,
       name: 'Audio & Musique',
+      slug: 'audio-musique',
       description: 'Création et édition audio assistée par IA',
       icon: Music,
       count: 19,
@@ -62,6 +69,7 @@ const CategoriesPage = () => {
     {
       id: 7,
       name: 'Vidéo',
+      slug: 'video',
       description: 'Production et édition vidéo avec IA',
       icon: Video,
       count: 15,
@@ -70,6 +78,7 @@ const CategoriesPage = () => {
     {
       id: 8,
       name: 'Analyse & Calcul',
+      slug: 'analyse-calcul',
       description: 'Outils d\'analyse de données et calculs',
       icon: Calculator,
       count: 22,
@@ -78,6 +87,7 @@ const CategoriesPage = () => {
     {
       id: 9,
       name: 'Art & Créativité',
+      slug: 'art-creativite',
       description: 'Outils créatifs pour artistes et designers',
       icon: Palette,
       count: 31,
@@ -142,24 +152,26 @@ const CategoriesPage = () => {
               {filteredCategories.map((category) => {
                 const IconComponent = category.icon;
                 return (
-                  <Card key={category.id} className="group hover:shadow-lg dark:hover:shadow-gray-700/50 transition-all duration-300 cursor-pointer hover:-translate-y-1 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center justify-between">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors duration-300 ${getColorClasses(category.color)}`}>
-                          <IconComponent className="h-6 w-6" />
+                  <Link key={category.id} to={`/categorie/${category.slug}`}>
+                    <Card className="group hover:shadow-lg dark:hover:shadow-gray-700/50 transition-all duration-300 cursor-pointer hover:-translate-y-1 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full">
+                      <CardHeader className="pb-4">
+                        <div className="flex items-center justify-between">
+                          <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-colors duration-300 ${getColorClasses(category.color)}`}>
+                            <IconComponent className="h-6 w-6" />
+                          </div>
+                          <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            {category.count} outils
+                          </div>
                         </div>
-                        <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          {category.count} outils
-                        </div>
-                      </div>
-                      <CardTitle className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 text-gray-900 dark:text-white">
-                        {category.name}
-                      </CardTitle>
-                      <CardDescription className="text-gray-600 dark:text-gray-300">
-                        {category.description}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
+                        <CardTitle className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 text-gray-900 dark:text-white">
+                          {category.name}
+                        </CardTitle>
+                        <CardDescription className="text-gray-600 dark:text-gray-300">
+                          {category.description}
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </Link>
                 );
               })}
             </div>

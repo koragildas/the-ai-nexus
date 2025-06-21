@@ -2,80 +2,81 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  PenTool, 
-  Image, 
-  Video, 
+  Brain, 
   Code, 
-  Briefcase, 
-  GraduationCap,
+  FileText, 
+  MessageSquare,
+  Image,
   Music,
-  MessageSquare
+  Video,
+  Calculator,
+  Palette
 } from 'lucide-react';
 
 const categories = [
   {
-    name: 'Écriture',
-    slug: 'ecriture',
-    icon: PenTool,
-    count: 125,
+    name: 'Assistant IA',
+    slug: 'assistant-ia',
+    icon: Brain,
+    count: 45,
     color: 'bg-blue-500',
-    description: 'Rédaction, copywriting, correction'
+    description: 'Assistants intelligents pour vos tâches'
   },
   {
-    name: 'Image',
-    slug: 'image',
-    icon: Image,
-    count: 89,
+    name: 'Développement',
+    slug: 'developpement',
+    icon: Code,
+    count: 32,
+    color: 'bg-green-500',
+    description: 'Outils pour développeurs'
+  },
+  {
+    name: 'Rédaction',
+    slug: 'redaction',
+    icon: FileText,
+    count: 28,
     color: 'bg-purple-500',
-    description: 'Génération, édition, design'
+    description: 'Génération de contenu textuel'
+  },
+  {
+    name: 'Chat & Communication',
+    slug: 'chat-communication',
+    icon: MessageSquare,
+    count: 23,
+    color: 'bg-orange-500',
+    description: 'Chatbots et communication'
+  },
+  {
+    name: 'Image & Design',
+    slug: 'image-design',
+    icon: Image,
+    count: 41,
+    color: 'bg-pink-500',
+    description: 'Génération et édition d\'images'
+  },
+  {
+    name: 'Audio & Musique',
+    slug: 'audio-musique',
+    icon: Music,
+    count: 19,
+    color: 'bg-indigo-500',
+    description: 'Création audio assistée par IA'
   },
   {
     name: 'Vidéo',
     slug: 'video',
     icon: Video,
-    count: 67,
-    color: 'bg-green-500',
-    description: 'Montage, génération, animation'
-  },
-  {
-    name: 'Code',
-    slug: 'code',
-    icon: Code,
-    count: 156,
-    color: 'bg-orange-500',
-    description: 'Programmation, debug, assistance'
-  },
-  {
-    name: 'Business',
-    slug: 'business',
-    icon: Briefcase,
-    count: 78,
+    count: 15,
     color: 'bg-red-500',
-    description: 'Productivité, analyse, stratégie'
+    description: 'Production vidéo avec IA'
   },
   {
-    name: 'Éducation',
-    slug: 'education',
-    icon: GraduationCap,
-    count: 45,
-    color: 'bg-indigo-500',
-    description: 'Apprentissage, formation, tutoriels'
-  },
-  {
-    name: 'Audio',
-    slug: 'audio',
-    icon: Music,
-    count: 34,
-    color: 'bg-pink-500',
-    description: 'Génération, édition, synthèse vocale'
-  },
-  {
-    name: 'Chatbots',
-    slug: 'chatbots',
-    icon: MessageSquare,
-    count: 92,
+    name: 'Analyse & Calcul',
+    slug: 'analyse-calcul',
+    icon: Calculator,
+    count: 22,
     color: 'bg-teal-500',
-    description: 'Assistants, conversation, support'
+    description: 'Analyse de données et calculs'
   }
 ];
 
@@ -84,10 +85,10 @@ export const Categories = () => {
     <section className="py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Explorez par catégorie
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Trouvez rapidement les outils IA adaptés à vos besoins spécifiques
           </p>
         </div>
@@ -99,23 +100,32 @@ export const Categories = () => {
               <Link
                 key={category.name}
                 to={`/categorie/${category.slug}`}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer group block"
+                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300 cursor-pointer group block"
               >
                 <div className={`${category.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <IconComponent className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                   {category.name}
                 </h3>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                   {category.description}
                 </p>
-                <div className="text-sm font-medium text-blue-600">
+                <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
                   {category.count} outils
                 </div>
               </Link>
             );
           })}
+        </div>
+        
+        <div className="text-center mt-12">
+          <Link
+            to="/categories"
+            className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg font-medium transition-colors"
+          >
+            Voir toutes les catégories
+          </Link>
         </div>
       </div>
     </section>
