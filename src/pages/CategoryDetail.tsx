@@ -1,11 +1,10 @@
-
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Star, Users, DollarSign } from 'lucide-react';
+import { ExternalLink, Star, Users, DollarSign, Eye } from 'lucide-react';
 
 // Données complètes d'outils IA par catégorie avec 5 outils chacune
 const aiToolsByCategory = {
@@ -593,13 +592,27 @@ const CategoryDetailPage = () => {
                         ))}
                       </div>
                       
-                      <Button 
-                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white" 
-                        onClick={() => window.open(tool.link, '_blank')}
-                      >
-                        Visiter le site
-                        <ExternalLink className="ml-2 h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Link 
+                          to={`/outil/${tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}
+                          className="flex-1"
+                        >
+                          <Button 
+                            variant="outline"
+                            className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                          >
+                            Découvrir
+                            <Eye className="ml-2 h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button 
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white" 
+                          onClick={() => window.open(tool.link, '_blank')}
+                        >
+                          Visiter
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
