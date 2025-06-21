@@ -57,23 +57,21 @@ export const Header = () => {
           </div>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden md:flex space-x-8 items-center">
+          <nav className="hidden md:flex space-x-6 items-center">
             <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Accueil</Link>
             <Link to="/categories" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Catégories</Link>
             <Link to="/populaires" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Populaires</Link>
-            
-            <ThemeToggle />
             
             {isAuthenticated ? (
               <>
                 <Link to="/soumettre" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Soumettre un outil</Link>
                 <Link to="/dashboard">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
                     <User className="mr-2 h-4 w-4" />
                     {user?.name}
                   </Button>
                 </Link>
-                <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <Button variant="ghost" size="sm" onClick={handleLogout} className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                   <LogOut className="h-4 w-4" />
                 </Button>
               </>
@@ -85,6 +83,10 @@ export const Header = () => {
                 </Button>
               </Link>
             )}
+            
+            <div className="ml-4">
+              <ThemeToggle />
+            </div>
           </nav>
 
           {/* Mobile menu button */}
@@ -94,6 +96,7 @@ export const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-700 dark:text-gray-300"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
