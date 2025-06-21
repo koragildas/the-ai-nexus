@@ -6,13 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const LegalMentions = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />
       
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Mentions Légales</h1>
-          <p className="text-xl text-gray-600">Informations légales et réglementaires</p>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Mentions Légales</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-300">Informations légales et réglementaires</p>
         </div>
 
         <div className="space-y-8">

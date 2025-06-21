@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { SearchBar } from '@/components/SearchBar';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,7 +37,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -57,13 +58,15 @@ export const Header = () => {
 
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex space-x-8 items-center">
-            <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">Accueil</Link>
-            <Link to="/categories" className="text-gray-700 hover:text-blue-600 transition-colors">Catégories</Link>
-            <Link to="/populaires" className="text-gray-700 hover:text-blue-600 transition-colors">Populaires</Link>
+            <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Accueil</Link>
+            <Link to="/categories" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Catégories</Link>
+            <Link to="/populaires" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Populaires</Link>
+            
+            <ThemeToggle />
             
             {isAuthenticated ? (
               <>
-                <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors">Soumettre un outil</Link>
+                <Link to="/soumettre" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Soumettre un outil</Link>
                 <Link to="/dashboard">
                   <Button variant="outline" size="sm">
                     <User className="mr-2 h-4 w-4" />
@@ -85,14 +88,16 @@ export const Header = () => {
           </nav>
 
           {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Search */}
@@ -104,20 +109,20 @@ export const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden pb-4">
             <nav className="flex flex-col space-y-2">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Accueil</Link>
-              <Link to="/categories" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Catégories</Link>
-              <Link to="/populaires" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Populaires</Link>
+              <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Accueil</Link>
+              <Link to="/categories" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Catégories</Link>
+              <Link to="/populaires" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Populaires</Link>
               
               {isAuthenticated ? (
                 <>
-                  <Link to="/soumettre" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Soumettre un outil</Link>
-                  <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Tableau de bord</Link>
-                  <button onClick={handleLogout} className="text-gray-700 hover:text-blue-600 transition-colors py-2 text-left">
+                  <Link to="/soumettre" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Soumettre un outil</Link>
+                  <Link to="/dashboard" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Tableau de bord</Link>
+                  <button onClick={handleLogout} className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2 text-left">
                     Déconnexion
                   </button>
                 </>
               ) : (
-                <Link to="/login" className="text-gray-700 hover:text-blue-600 transition-colors py-2">Connexion</Link>
+                <Link to="/login" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Connexion</Link>
               )}
             </nav>
           </div>
