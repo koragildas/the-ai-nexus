@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { 
   Users, 
@@ -28,6 +29,8 @@ export const UserManagement = () => {
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
@@ -63,6 +66,24 @@ export const UserManagement = () => {
       status: 'suspended',
       createdAt: '2024-01-12',
       lastLogin: '2024-01-18'
+    },
+    {
+      id: '4',
+      name: 'Sophie Bernard',
+      email: 'sophie.bernard@example.com',
+      role: 'user',
+      status: 'pending',
+      createdAt: '2024-01-22',
+      lastLogin: undefined
+    },
+    {
+      id: '5',
+      name: 'Lucas Moreau',
+      email: 'lucas.moreau@example.com',
+      role: 'admin',
+      status: 'active',
+      createdAt: '2024-01-08',
+      lastLogin: '2024-01-21'
     }
   ]);
 
@@ -76,6 +97,15 @@ export const UserManagement = () => {
   });
 
   const handleAddUser = () => {
+    if (!newUser.name || !newUser.email) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const user: User = {
       id: Date.now().toString(),
       name: newUser.name,
@@ -92,6 +122,36 @@ export const UserManagement = () => {
     toast({
       title: "Utilisateur ajouté",
       description: `${user.name} a été ajouté avec succès.`,
+    });
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateUser = () => {
+    if (!editingUser) return;
+
+    setUsers(users.map(user => 
+      user.id === editingUser.id ? editingUser : user
+    ));
+    
+    setIsEditDialogOpen(false);
+    setEditingUser(null);
+    
+    toast({
+      title: "Utilisateur modifié",
+      description: `${editingUser.name} a été mis à jour avec succès.`,
+    });
+  };
+
+  const handleDeleteUser = (userId: string, userName: string) => {
+    setUsers(users.filter(user => user.id !== userId));
+    
+    toast({
+      title: "Utilisateur supprimé",
+      description: `${userName} a été supprimé avec succès.`,
     });
   };
 
@@ -114,6 +174,20 @@ export const UserManagement = () => {
     toast({
       title: "Statut modifié",
       description: "Le statut de l'utilisateur a été mis à jour.",
+    });
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
+
+  const clearFilters = () => {
+    setRoleFilter('all');
+    setStatusFilter('all');
+    setSearchTerm('');
+    toast({
+      title: "Filtres effacés",
+      description: "Tous les filtres ont été réinitialisés.",
     });
   };
 
@@ -147,67 +221,90 @@ export const UserManagement = () => {
             <div>
               <CardTitle className="flex items-center">
                 <Users className="h-5 w-5 mr-2" />
-                Gestion des utilisateurs
+                Gestion des utilisateurs ({filteredUsers.length})
               </CardTitle>
               <CardDescription>
                 Gérez les utilisateurs, leurs rôles et permissions
               </CardDescription>
             </div>
             
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Ajouter utilisateur
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Ajouter un nouvel utilisateur</DialogTitle>
-                  <DialogDescription>
-                    Créez un nouveau compte utilisateur avec les permissions appropriées.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Nom complet</Label>
-                    <Input
-                      id="name"
-                      value={newUser.name}
-                      onChange={(e) => setNewUser({...newUser, name: e.target.value})}
-                      placeholder="Nom de l'utilisateur"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={newUser.email}
-                      onChange={(e) => setNewUser({...newUser, email: e.target.value})}
-                      placeholder="email@example.com"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="role">Rôle</Label>
-                    <Select value={newUser.role} onValueChange={(value) => setNewUser({...newUser, role: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="user">Utilisateur</SelectItem>
-                        <SelectItem value="admin">Administrateur</SelectItem>
-                        <SelectItem value="superadmin">Super Administrateur</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button onClick={handleAddUser} className="w-full">
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Créer l'utilisateur
+            <div className="flex space-x-2">
+              <Button variant="outline" onClick={clearFilters}>
+                Effacer filtres
+              </Button>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Ajouter utilisateur
                   </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Ajouter un nouvel utilisateur</DialogTitle>
+                    <DialogDescription>
+                      Créez un nouveau compte utilisateur avec les permissions appropriées.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="name">Nom complet *</Label>
+                      <Input
+                        id="name"
+                        value={newUser.name}
+                        onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                        placeholder="Nom de l'utilisateur"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email">Email *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={newUser.email}
+                        onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                        placeholder="email@example.com"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="role">Rôle</Label>
+                      <Select value={newUser.role} onValueChange={(value) => setNewUser({...newUser, role: value})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="user">Utilisateur</SelectItem>
+                          <SelectItem value="admin">Administrateur</SelectItem>
+                          <SelectItem value="superadmin">Super Administrateur</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="status">Statut</Label>
+                      <Select value={newUser.status} onValueChange={(value) => setNewUser({...newUser, status: value})}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Actif</SelectItem>
+                          <SelectItem value="pending">En attente</SelectItem>
+                          <SelectItem value="suspended">Suspendu</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button onClick={handleAddUser} className="flex-1">
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Créer l'utilisateur
+                      </Button>
+                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="flex-1">
+                        Annuler
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -221,6 +318,16 @@ export const UserManagement = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-9"
               />
+              {searchTerm && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+                  onClick={clearSearch}
+                >
+                  ×
+                </Button>
+              )}
             </div>
             <Select value={roleFilter} onValueChange={setRoleFilter}>
               <SelectTrigger className="w-40">
@@ -295,20 +402,130 @@ export const UserManagement = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handleEditUser(user)}
+                        className="hover:bg-blue-50 hover:text-blue-600"
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Supprimer l'utilisateur</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Êtes-vous sûr de vouloir supprimer <strong>{user.name}</strong> ? 
+                              Cette action est irréversible.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => handleDeleteUser(user.id, user.name)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Supprimer
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+
+          {filteredUsers.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              {searchTerm || roleFilter !== 'all' || statusFilter !== 'all' 
+                ? 'Aucun utilisateur ne correspond aux critères de recherche.'
+                : 'Aucun utilisateur trouvé.'
+              }
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Dialog d'édition */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Modifier l'utilisateur</DialogTitle>
+            <DialogDescription>
+              Modifiez les informations de l'utilisateur.
+            </DialogDescription>
+          </DialogHeader>
+          {editingUser && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-name">Nom complet</Label>
+                <Input
+                  id="edit-name"
+                  value={editingUser.name}
+                  onChange={(e) => setEditingUser({...editingUser, name: e.target.value})}
+                  placeholder="Nom de l'utilisateur"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-email">Email</Label>
+                <Input
+                  id="edit-email"
+                  type="email"
+                  value={editingUser.email}
+                  onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
+                  placeholder="email@example.com"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-role">Rôle</Label>
+                <Select value={editingUser.role} onValueChange={(value) => setEditingUser({...editingUser, role: value as 'user' | 'admin' | 'superadmin'})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">Utilisateur</SelectItem>
+                    <SelectItem value="admin">Administrateur</SelectItem>
+                    <SelectItem value="superadmin">Super Administrateur</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-status">Statut</Label>
+                <Select value={editingUser.status} onValueChange={(value) => setEditingUser({...editingUser, status: value as 'active' | 'suspended' | 'pending'})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Actif</SelectItem>
+                    <SelectItem value="pending">En attente</SelectItem>
+                    <SelectItem value="suspended">Suspendu</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex space-x-2">
+                <Button onClick={handleUpdateUser} className="flex-1">
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Sauvegarder
+                </Button>
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="flex-1">
+                  Annuler
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

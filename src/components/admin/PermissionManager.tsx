@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Shield, Users, Settings, Database, FileText } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Shield, Users, Settings, Database, FileText, Save, RotateCcw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 type RoleType = 'admin' | 'user';
@@ -31,78 +33,80 @@ interface RolePermissions {
 
 type AllPermissions = Record<RoleType, RolePermissions>;
 
+const defaultPermissions: AllPermissions = {
+  admin: {
+    users: {
+      view: true,
+      create: true,
+      edit: true,
+      delete: false
+    },
+    tools: {
+      view: true,
+      create: true,
+      edit: true,
+      delete: true,
+      approve: true
+    },
+    system: {
+      view: true,
+      create: false,
+      edit: false,
+      delete: false,
+      backup: false,
+      restore: false,
+      logs: true
+    },
+    content: {
+      view: true,
+      create: true,
+      edit: true,
+      delete: true,
+      moderate: true
+    }
+  },
+  user: {
+    users: {
+      view: false,
+      create: false,
+      edit: false,
+      delete: false
+    },
+    tools: {
+      view: true,
+      create: false,
+      edit: false,
+      delete: false,
+      approve: false
+    },
+    system: {
+      view: false,
+      create: false,
+      edit: false,
+      delete: false,
+      backup: false,
+      restore: false,
+      logs: false
+    },
+    content: {
+      view: true,
+      create: true,
+      edit: false,
+      delete: false,
+      moderate: false
+    }
+  }
+};
+
 export const PermissionManager = () => {
   const { toast } = useToast();
   const [selectedRole, setSelectedRole] = useState<RoleType>('admin');
-  
-  const [permissions, setPermissions] = useState<AllPermissions>({
-    admin: {
-      users: {
-        view: true,
-        create: true,
-        edit: true,
-        delete: false
-      },
-      tools: {
-        view: true,
-        create: true,
-        edit: true,
-        delete: true,
-        approve: true
-      },
-      system: {
-        view: true,
-        create: false,
-        edit: false,
-        delete: false,
-        backup: false,
-        restore: false,
-        logs: true
-      },
-      content: {
-        view: true,
-        create: true,
-        edit: true,
-        delete: true,
-        moderate: true
-      }
-    },
-    user: {
-      users: {
-        view: false,
-        create: false,
-        edit: false,
-        delete: false
-      },
-      tools: {
-        view: true,
-        create: false,
-        edit: false,
-        delete: false,
-        approve: false
-      },
-      system: {
-        view: false,
-        create: false,
-        edit: false,
-        delete: false,
-        backup: false,
-        restore: false,
-        logs: false
-      },
-      content: {
-        view: true,
-        create: true,
-        edit: false,
-        delete: false,
-        moderate: false
-      }
-    }
-  });
+  const [permissions, setPermissions] = useState<AllPermissions>(defaultPermissions);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   const permissionCategories = [
     {
-      id: 'users',
+      id: 'users' as keyof RolePermissions,
       name: 'Gestion des utilisateurs',
       icon: Users,
       description: 'Permissions liées à la gestion des comptes utilisateurs',
@@ -114,7 +118,7 @@ export const PermissionManager = () => {
       ]
     },
     {
-      id: 'tools',
+      id: 'tools' as keyof RolePermissions,
       name: 'Gestion des outils IA',
       icon: Database,
       description: 'Permissions pour la gestion des outils IA',
@@ -127,7 +131,7 @@ export const PermissionManager = () => {
       ]
     },
     {
-      id: 'system',
+      id: 'system' as keyof RolePermissions,
       name: 'Administration système',
       icon: Settings,
       description: 'Permissions système avancées',
@@ -139,7 +143,7 @@ export const PermissionManager = () => {
       ]
     },
     {
-      id: 'content',
+      id: 'content' as keyof RolePermissions,
       name: 'Gestion du contenu',
       icon: FileText,
       description: 'Permissions liées au contenu du site',
@@ -153,25 +157,30 @@ export const PermissionManager = () => {
     }
   ];
 
-  const handlePermissionChange = (category: string, permission: string, value: boolean) => {
+  const handlePermissionChange = (category: keyof RolePermissions, permission: string, value: boolean) => {
     setPermissions(prev => ({
       ...prev,
       [selectedRole]: {
         ...prev[selectedRole],
         [category]: {
-          ...prev[selectedRole][category as keyof RolePermissions],
+          ...prev[selectedRole][category],
           [permission]: value
         }
       }
     }));
 
+    setHasUnsavedChanges(true);
+
     toast({
-      title: "Permission mise à jour",
+      title: "Permission modifiée",
       description: `Permission ${permission} ${value ? 'accordée' : 'révoquée'} pour le rôle ${selectedRole}.`,
     });
   };
 
   const resetPermissions = () => {
+    setPermissions(defaultPermissions);
+    setHasUnsavedChanges(false);
+    
     toast({
       title: "Permissions réinitialisées",
       description: "Les permissions ont été restaurées aux valeurs par défaut.",
@@ -179,10 +188,47 @@ export const PermissionManager = () => {
   };
 
   const savePermissions = () => {
+    // Ici, vous pourriez envoyer les permissions vers un backend
+    console.log('Sauvegarde des permissions:', permissions);
+    
+    setHasUnsavedChanges(false);
+    
     toast({
       title: "Permissions sauvegardées",
       description: "Toutes les modifications ont été enregistrées avec succès.",
     });
+  };
+
+  const toggleAllPermissions = (category: keyof RolePermissions, enable: boolean) => {
+    const categoryPermissions = permissions[selectedRole][category];
+    const updatedPermissions = Object.keys(categoryPermissions).reduce((acc, key) => {
+      acc[key] = enable;
+      return acc;
+    }, {} as any);
+
+    setPermissions(prev => ({
+      ...prev,
+      [selectedRole]: {
+        ...prev[selectedRole],
+        [category]: updatedPermissions
+      }
+    }));
+
+    setHasUnsavedChanges(true);
+
+    toast({
+      title: enable ? "Permissions activées" : "Permissions désactivées",
+      description: `Toutes les permissions de ${permissionCategories.find(c => c.id === category)?.name} ont été ${enable ? 'activées' : 'désactivées'}.`,
+    });
+  };
+
+  const getActivePermissionsCount = (category: keyof RolePermissions) => {
+    const categoryPermissions = permissions[selectedRole][category];
+    return Object.values(categoryPermissions).filter(Boolean).length;
+  };
+
+  const getTotalPermissionsCount = (category: keyof RolePermissions) => {
+    return Object.keys(permissions[selectedRole][category]).length;
   };
 
   return (
@@ -194,16 +240,43 @@ export const PermissionManager = () => {
               <CardTitle className="flex items-center">
                 <Shield className="h-5 w-5 mr-2" />
                 Gestionnaire de permissions
+                {hasUnsavedChanges && (
+                  <Badge variant="secondary" className="ml-2">
+                    Modifications non sauvegardées
+                  </Badge>
+                )}
               </CardTitle>
               <CardDescription>
                 Configurez les permissions et autorisations par rôle utilisateur
               </CardDescription>
             </div>
             <div className="flex space-x-2">
-              <Button variant="outline" onClick={resetPermissions}>
-                Réinitialiser
-              </Button>
-              <Button onClick={savePermissions}>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline">
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Réinitialiser
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Réinitialiser les permissions</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Êtes-vous sûr de vouloir restaurer toutes les permissions aux valeurs par défaut ? 
+                      Cette action effacera toutes vos modifications actuelles.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogAction onClick={resetPermissions}>
+                      Réinitialiser
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              
+              <Button onClick={savePermissions} disabled={!hasUnsavedChanges}>
+                <Save className="h-4 w-4 mr-2" />
                 Sauvegarder
               </Button>
             </div>
@@ -239,26 +312,51 @@ export const PermissionManager = () => {
             {permissionCategories.map((category) => {
               const IconComponent = category.icon;
               const rolePermissions = permissions[selectedRole];
-              const categoryPermissions = rolePermissions[category.id as keyof RolePermissions];
+              const categoryPermissions = rolePermissions[category.id];
+              const activeCount = getActivePermissionsCount(category.id);
+              const totalCount = getTotalPermissionsCount(category.id);
 
               return (
                 <Card key={category.id} className="border-l-4 border-l-blue-500">
                   <CardHeader>
-                    <CardTitle className="flex items-center text-lg">
-                      <IconComponent className="h-5 w-5 mr-2" />
-                      {category.name}
-                    </CardTitle>
-                    <CardDescription>
-                      {category.description}
-                    </CardDescription>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="flex items-center text-lg">
+                          <IconComponent className="h-5 w-5 mr-2" />
+                          {category.name}
+                          <Badge variant="outline" className="ml-2">
+                            {activeCount}/{totalCount}
+                          </Badge>
+                        </CardTitle>
+                        <CardDescription>
+                          {category.description}
+                        </CardDescription>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => toggleAllPermissions(category.id, true)}
+                        >
+                          Tout activer
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => toggleAllPermissions(category.id, false)}
+                        >
+                          Tout désactiver
+                        </Button>
+                      </div>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {category.permissions.map((permission) => (
-                        <div key={permission.id} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div key={permission.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
                           <div className="flex-1">
                             <div className="flex items-center space-x-2">
-                              <Label htmlFor={`${category.id}-${permission.id}`} className="font-medium">
+                              <Label htmlFor={`${category.id}-${permission.id}`} className="font-medium cursor-pointer">
                                 {permission.label}
                               </Label>
                             </div>
@@ -282,12 +380,15 @@ export const PermissionManager = () => {
 
           <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
             <div className="flex items-start">
-              <Shield className="h-5 w-5 text-yellow-600 mt-0.5 mr-2" />
+              <Shield className="h-5 w-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" />
               <div>
                 <h4 className="font-medium text-yellow-800">Important</h4>
                 <p className="text-sm text-yellow-700 mt-1">
-                  Les modifications de permissions prennent effet immédiatement. 
+                  Les modifications de permissions prennent effet immédiatement après sauvegarde. 
                   Les utilisateurs devront se reconnecter pour voir les changements appliqués.
+                  {hasUnsavedChanges && (
+                    <span className="font-medium"> N'oubliez pas de sauvegarder vos modifications!</span>
+                  )}
                 </p>
               </div>
             </div>
