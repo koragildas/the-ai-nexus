@@ -9,11 +9,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Shield, Users, Settings, Database, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+type RoleType = 'admin' | 'user';
+
+interface PermissionSet {
+  view: boolean;
+  create: boolean;
+  edit: boolean;
+  delete: boolean;
+  approve?: boolean;
+  backup?: boolean;
+  restore?: boolean;
+  logs?: boolean;
+  moderate?: boolean;
+}
+
+interface RolePermissions {
+  users: PermissionSet;
+  tools: PermissionSet;
+  system: PermissionSet;
+  content: PermissionSet;
+}
+
+type AllPermissions = Record<RoleType, RolePermissions>;
+
 export const PermissionManager = () => {
   const { toast } = useToast();
-  const [selectedRole, setSelectedRole] = useState('admin');
+  const [selectedRole, setSelectedRole] = useState<RoleType>('admin');
   
-  const [permissions, setPermissions] = useState({
+  const [permissions, setPermissions] = useState<AllPermissions>({
     admin: {
       users: {
         view: true,
@@ -129,9 +152,9 @@ export const PermissionManager = () => {
     setPermissions(prev => ({
       ...prev,
       [selectedRole]: {
-        ...prev[selectedRole as keyof typeof prev],
+        ...prev[selectedRole],
         [category]: {
-          ...prev[selectedRole as keyof typeof prev][category as keyof typeof prev[selectedRole]],
+          ...prev[selectedRole][category as keyof RolePermissions],
           [permission]: value
         }
       }
@@ -186,7 +209,7 @@ export const PermissionManager = () => {
             <Label htmlFor="role-select" className="text-base font-medium">
               Sélectionner un rôle:
             </Label>
-            <Select value={selectedRole} onValueChange={setSelectedRole}>
+            <Select value={selectedRole} onValueChange={(value: RoleType) => setSelectedRole(value)}>
               <SelectTrigger className="w-60 mt-2">
                 <SelectValue />
               </SelectTrigger>
@@ -210,8 +233,8 @@ export const PermissionManager = () => {
           <div className="space-y-6">
             {permissionCategories.map((category) => {
               const IconComponent = category.icon;
-              const rolePermissions = permissions[selectedRole as keyof typeof permissions];
-              const categoryPermissions = rolePermissions[category.id as keyof typeof rolePermissions];
+              const rolePermissions = permissions[selectedRole];
+              const categoryPermissions = rolePermissions[category.id as keyof RolePermissions];
 
               return (
                 <Card key={category.id} className="border-l-4 border-l-blue-500">
@@ -240,7 +263,7 @@ export const PermissionManager = () => {
                           </div>
                           <Switch
                             id={`${category.id}-${permission.id}`}
-                            checked={categoryPermissions[permission.id as keyof typeof categoryPermissions] as boolean}
+                            checked={Boolean(categoryPermissions[permission.id as keyof PermissionSet])}
                             onCheckedChange={(value) => handlePermissionChange(category.id, permission.id, value)}
                           />
                         </div>
