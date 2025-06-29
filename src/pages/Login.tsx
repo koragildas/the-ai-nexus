@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { LogIn, Mail, Lock, User, Shield } from 'lucide-react';
+import { LogIn, Mail, Lock, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const LoginPage = () => {
@@ -98,26 +98,6 @@ const LoginPage = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSuperAdminAccess = () => {
-    setFormData({
-      email: 'superadmin@ainexus.com',
-      password: 'SuperAdmin2024!',
-      confirmPassword: '',
-      name: ''
-    });
-    setIsLogin(true);
-  };
-
-  const handleAdminAccess = () => {
-    setFormData({
-      email: 'admin@ainexus.com',
-      password: 'Admin2024!',
-      confirmPassword: '',
-      name: ''
-    });
-    setIsLogin(true);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Header />
@@ -139,30 +119,6 @@ const LoginPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Accès rapide admin */}
-              {isLogin && (
-                <div className="mb-6 space-y-2">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="w-full text-red-600 border-red-200 hover:bg-red-50"
-                    onClick={handleSuperAdminAccess}
-                  >
-                    <Shield className="h-4 w-4 mr-2" />
-                    Accès Super Admin
-                  </Button>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="w-full text-blue-600 border-blue-200 hover:bg-blue-50"
-                    onClick={handleAdminAccess}
-                  >
-                    <User className="h-4 w-4 mr-2" />
-                    Accès Admin
-                  </Button>
-                </div>
-              )}
-
               <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
                   <div className="space-y-2">

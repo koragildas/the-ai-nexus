@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,6 +52,9 @@ export const PermissionManager = () => {
       },
       system: {
         view: true,
+        create: false,
+        edit: false,
+        delete: false,
         backup: false,
         restore: false,
         logs: true
@@ -81,6 +83,9 @@ export const PermissionManager = () => {
       },
       system: {
         view: false,
+        create: false,
+        edit: false,
+        delete: false,
         backup: false,
         restore: false,
         logs: false
