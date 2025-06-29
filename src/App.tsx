@@ -14,6 +14,7 @@ import Advertise from "./pages/Advertise";
 import AIToolDetail from "./pages/AIToolDetail";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import SuperAdmin from "./pages/SuperAdmin";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import LegalMentions from "./pages/LegalMentions";
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/outil/:toolSlug" element={<AIToolDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/super-admin" element={<SuperAdmin />} />
             <Route path="/a-propos" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/mentions-legales" element={<LegalMentions />} />
