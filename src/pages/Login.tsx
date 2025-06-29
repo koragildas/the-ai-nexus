@@ -205,18 +205,6 @@ const LoginPage = () => {
                   </button>
                 </p>
               </div>
-
-              {/* Instructions de connexion */}
-              {isLogin && (
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">Comptes de test :</h4>
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <p><strong>Super Admin:</strong> superadmin@ainexus.com / SuperAdmin2024!</p>
-                    <p><strong>Admin:</strong> admin@ainexus.com / Admin2024!</p>
-                    <p><strong>Utilisateur:</strong> Tout autre email/mot de passe</p>
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>
