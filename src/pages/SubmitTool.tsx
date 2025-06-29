@@ -13,10 +13,26 @@ import { Badge } from '@/components/ui/badge';
 import { PlusCircle, Send, X, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+interface FormData {
+  name: string;
+  description: string;
+  longDescription: string;
+  url: string;
+  category: string;
+  pricing: string;
+  language: string;
+  rating: string;
+  users: string;
+  features: string[];
+  pros: string[];
+  cons: string[];
+  tags: string[];
+}
+
 const SubmitToolPage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     description: '',
     longDescription: '',
@@ -90,30 +106,30 @@ const SubmitToolPage = () => {
     });
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleArrayChange = (field: string, index: number, value: string) => {
+  const handleArrayChange = (field: keyof FormData, index: number, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].map((item: string, i: number) => 
+      [field]: (prev[field] as string[]).map((item: string, i: number) => 
         i === index ? value : item
       )
     }));
   };
 
-  const addArrayItem = (field: string) => {
+  const addArrayItem = (field: keyof FormData) => {
     setFormData(prev => ({
       ...prev,
-      [field]: [...prev[field as keyof typeof prev], '']
+      [field]: [...(prev[field] as string[]), '']
     }));
   };
 
-  const removeArrayItem = (field: string, index: number) => {
+  const removeArrayItem = (field: keyof FormData, index: number) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].filter((_: string, i: number) => i !== index)
+      [field]: (prev[field] as string[]).filter((_: string, i: number) => i !== index)
     }));
   };
 
@@ -123,7 +139,7 @@ const SubmitToolPage = () => {
     placeholder, 
     description 
   }: { 
-    field: string; 
+    field: keyof FormData; 
     label: string; 
     placeholder: string; 
     description?: string; 
@@ -132,7 +148,7 @@ const SubmitToolPage = () => {
       <Label>{label}</Label>
       {description && <p className="text-sm text-gray-600">{description}</p>}
       <div className="space-y-2">
-        {formData[field as keyof typeof formData].map((item: string, index: number) => (
+        {(formData[field] as string[]).map((item: string, index: number) => (
           <div key={index} className="flex gap-2">
             <Input
               placeholder={placeholder}
@@ -140,7 +156,7 @@ const SubmitToolPage = () => {
               onChange={(e) => handleArrayChange(field, index, e.target.value)}
               className="flex-1"
             />
-            {formData[field as keyof typeof formData].length > 1 && (
+            {(formData[field] as string[]).length > 1 && (
               <Button
                 type="button"
                 variant="outline"
