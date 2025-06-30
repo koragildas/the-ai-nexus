@@ -3,488 +3,267 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { SocialShare } from '@/components/SocialShare';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { 
-  ArrowLeft, 
-  Star, 
   ExternalLink, 
-  Heart, 
-  Bookmark,
-  Users,
-  Calendar,
-  Globe,
-  Zap
+  Star, 
+  Users, 
+  Calendar, 
+  Globe, 
+  Shield, 
+  Zap,
+  ArrowLeft,
+  Heart,
+  Share2,
+  MessageSquare
 } from 'lucide-react';
 
-const AIToolDetail = () => {
+const AIToolDetailPage = () => {
   const { toolSlug } = useParams();
 
-  // Base de données complète d'outils IA avec toutes leurs informations détaillées
+  // Mock data - in real app this would come from API
   const toolData = {
-    'chatgpt': {
-      name: 'ChatGPT',
-      category: 'Assistant IA',
-      description: 'ChatGPT est un modèle de langage IA développé par OpenAI qui peut converser, répondre aux questions et aider dans diverses tâches de rédaction.',
-      longDescription: 'ChatGPT (Chat Generative Pre-trained Transformer) est un chatbot IA lancé par OpenAI en novembre 2022. Il est basé sur la famille de modèles de langage GPT-3.5 et GPT-4 d\'OpenAI et a été affiné à l\'aide de techniques d\'apprentissage supervisé et par renforcement.',
-      rating: 4.8,
-      users: '100M+',
-      website: 'https://chat.openai.com',
-      pricing: 'Freemium',
-      features: [
-        'Conversations naturelles en temps réel',
-        'Génération de contenu créatif',
-        'Assistance à la programmation',
-        'Traduction multilingue',
-        'Analyse et résumé de textes',
-        'Aide aux devoirs et recherches'
-      ],
-      pros: [
-        'Interface utilisateur intuitive',
-        'Réponses très cohérentes',
-        'Large base de connaissances',
-        'Gratuit avec limitations'
-      ],
-      cons: [
-        'Informations parfois obsolètes',
-        'Peut générer du contenu inexact',
-        'Limitations dans la version gratuite'
-      ]
-    },
-    'claude': {
-      name: 'Claude',
-      category: 'Assistant IA',
-      description: 'Assistant IA d\'Anthropic pour des conversations intelligentes et sécurisées.',
-      longDescription: 'Claude est un assistant IA développé par Anthropic, conçu pour être utile, inoffensif et honnête. Il excelle dans l\'analyse de textes longs, la programmation et les conversations nuancées.',
-      rating: 4.7,
-      users: '10M+',
-      website: 'https://claude.ai',
-      pricing: 'Freemium',
-      features: [
-        'Analyse de documents longs',
-        'Programmation avancée',
-        'Conversations contextuelles',
-        'Sécurité renforcée',
-        'Raisonnement logique',
-        'Support multilingue'
-      ],
-      pros: [
-        'Excellente sécurité',
-        'Analyse de longs textes',
-        'Réponses nuancées',
-        'Bon pour la programmation'
-      ],
-      cons: [
-        'Moins populaire que ChatGPT',
-        'Interface moins intuitive',
-        'Limitations géographiques'
-      ]
-    },
-    'midjourney': {
-      name: 'Midjourney',
-      category: 'Image & Design',
-      description: 'Midjourney est un programme d\'intelligence artificielle qui génère des images à partir de descriptions textuelles.',
-      longDescription: 'Midjourney est un laboratoire de recherche indépendant qui produit un programme d\'intelligence artificielle du même nom qui crée des images à partir de descriptions textuelles, similaire aux DALL-E d\'OpenAI et au Stable Diffusion.',
-      rating: 4.9,
-      users: '15M+',
-      website: 'https://midjourney.com',
-      pricing: 'Payant',
-      features: [
-        'Génération d\'images haute qualité',
-        'Styles artistiques variés',
-        'Interface Discord intégrée',
-        'Modes de rendu avancés',
-        'Upscaling et variations',
-        'Communauté active'
-      ],
-      pros: [
-        'Qualité d\'image exceptionnelle',
-        'Grande créativité artistique',
-        'Communauté très active',
-        'Mises à jour régulières'
-      ],
-      cons: [
-        'Uniquement via Discord',
-        'Pas de version gratuite',
-        'Courbe d\'apprentissage'
-      ]
-    },
-    'github-copilot': {
-      name: 'GitHub Copilot',
-      category: 'Développement',
-      description: 'Assistant IA pour la programmation et le développement de code.',
-      longDescription: 'GitHub Copilot est un assistant de programmation IA qui aide les développeurs à écrire du code plus rapidement en fournissant des suggestions contextuelles directement dans l\'éditeur.',
-      rating: 4.5,
-      users: '5M+',
-      website: 'https://github.com/features/copilot',
-      pricing: 'Payant',
-      features: [
-        'Autocomplétion de code intelligente',
-        'Support multi-langages',
-        'Intégration IDE',
-        'Génération de fonctions',
-        'Documentation automatique',
-        'Refactoring assisté'
-      ],
-      pros: [
-        'Très précis pour le code',
-        'Gain de productivité énorme',
-        'Support excellent',
-        'Intégration native GitHub'
-      ],
-      cons: [
-        'Coût mensuel',
-        'Parfois suggestions incorrectes',
-        'Dépendance à l\'outil'
-      ]
-    },
-    'jasper': {
-      name: 'Jasper',
-      category: 'Rédaction',
-      description: 'IA spécialisée dans la création de contenu marketing et publicitaire.',
-      longDescription: 'Jasper est un assistant d\'écriture IA conçu spécifiquement pour les équipes marketing et les créateurs de contenu, offrant des templates et des outils optimisés pour le marketing.',
-      rating: 4.5,
-      users: '1M+',
-      website: 'https://jasper.ai',
-      pricing: 'Payant',
-      features: [
-        'Templates marketing prêts',
-        'Optimisation SEO',
-        'Ton de marque personnalisé',
-        'Génération de campagnes',
-        'Collaboration d\'équipe',
-        'Intégrations marketing'
-      ],
-      pros: [
-        'Spécialisé marketing',
-        'Templates de qualité',
-        'Bon pour les équipes',
-        'Résultats professionnels'
-      ],
-      cons: [
-        'Prix élevé',
-        'Courbe d\'apprentissage',
-        'Pas de version gratuite'
-      ]
-    },
-    'dall-e-3': {
-      name: 'DALL-E 3',
-      category: 'Image & Design',
-      description: 'Générateur d\'images IA de haute qualité développé par OpenAI.',
-      longDescription: 'DALL-E 3 est la dernière version du générateur d\'images d\'OpenAI, capable de créer des images détaillées et artistiques à partir de descriptions textuelles simples.',
-      rating: 4.7,
-      users: '10M+',
-      website: 'https://openai.com/dall-e-3',
-      pricing: 'Payant',
-      features: [
-        'Génération haute résolution',
-        'Compréhension contextuelle',
-        'Styles artistiques variés',
-        'Intégration ChatGPT',
-        'Édition d\'images',
-        'Respect des prompts'
-      ],
-      pros: [
-        'Qualité exceptionnelle',
-        'Facile à utiliser',
-        'Intégration OpenAI',
-        'Résultats cohérents'
-      ],
-      cons: [
-        'Coût par génération',
-        'Limitations de contenu',
-        'Pas de version gratuite'
-      ]
-    },
-    'suno': {
-      name: 'Suno',
-      category: 'Audio & Musique',
-      description: 'Générateur de musique IA capable de créer des chansons complètes avec paroles.',
-      longDescription: 'Suno est un outil révolutionnaire qui permet de générer des chansons complètes avec musique et paroles à partir de simples descriptions textuelles.',
-      rating: 4.6,
-      users: '1M+',
-      website: 'https://suno.com',
-      pricing: 'Freemium',
-      features: [
-        'Génération de chansons complètes',
-        'Création de paroles automatique',
-        'Styles musicaux variés',
-        'Qualité studio',
-        'Export haute qualité',
-        'Personnalisation avancée'
-      ],
-      pros: [
-        'Résultats impressionnants',
-        'Facile à utiliser',
-        'Variété de styles',
-        'Qualité professionnelle'
-      ],
-      cons: [
-        'Limites version gratuite',
-        'Parfois répétitif',
-        'Contrôle limité'
-      ]
-    },
-    'runway-ml': {
-      name: 'Runway ML',
-      category: 'Vidéo',
-      description: 'Suite complète d\'outils IA pour la création et l\'édition vidéo.',
-      longDescription: 'Runway ML offre une gamme complète d\'outils IA pour les créateurs vidéo, de la génération de vidéos à partir de texte aux effets spéciaux avancés.',
-      rating: 4.6,
-      users: '2M+',
-      website: 'https://runwayml.com',
-      pricing: 'Freemium',
-      features: [
-        'Génération vidéo text-to-video',
-        'Effets spéciaux IA',
-        'Suppression d\'arrière-plan',
-        'Upscaling vidéo',
-        'Motion tracking',
-        'Collaboration en temps réel'
-      ],
-      pros: [
-        'Outils très avancés',
-        'Interface professionnelle',
-        'Résultats de qualité',
-        'Innovation constante'
-      ],
-      cons: [
-        'Coût élevé',
-        'Complexité d\'usage',
-        'Ressources intensives'
-      ]
-    },
-    'wolfram-alpha': {
-      name: 'Wolfram Alpha',
-      category: 'Analyse & Calcul',
-      description: 'Moteur de calcul et d\'analyse de données computationnel avancé.',
-      longDescription: 'Wolfram Alpha est un moteur de réponse computationnel qui répond aux questions en calculant des réponses à partir de données structurées.',
-      rating: 4.5,
-      users: '10M+',
-      website: 'https://wolframalpha.com',
-      pricing: 'Freemium',
-      features: [
-        'Calculs mathématiques avancés',
-        'Analyse statistique',
-        'Résolution d\'équations',
-        'Graphiques et visualisations',
-        'Base de données factuelles',
-        'API développeur'
-      ],
-      pros: [
-        'Précision exceptionnelle',
-        'Large gamme de sujets',
-        'Visualisations claires',
-        'Fiabilité des données'
-      ],
-      cons: [
-        'Interface complexe',
-        'Courbe d\'apprentissage',
-        'Limites version gratuite'
-      ]
-    },
-    'adobe-firefly': {
-      name: 'Adobe Firefly',
-      category: 'Art & Créativité',
-      description: 'Suite créative IA intégrée aux produits Adobe Creative Cloud.',
-      longDescription: 'Adobe Firefly est la famille de modèles d\'IA créative d\'Adobe, intégrée directement dans les applications Creative Cloud pour améliorer les flux de travail créatifs.',
-      rating: 4.5,
-      users: '5M+',
-      website: 'https://firefly.adobe.com',
-      pricing: 'Freemium',
-      features: [
-        'Intégration Creative Cloud',
-        'Génération d\'images',
-        'Effets de texte',
-        'Retouche automatique',
-        'Génération de motifs',
-        'Colorisation automatique'
-      ],
-      pros: [
-        'Intégration parfaite Adobe',
-        'Qualité professionnelle',
-        'Flux de travail optimisé',
-        'Formation commerciale sûre'
-      ],
-      cons: [
-        'Limité à l\'écosystème Adobe',
-        'Coût des abonnements',
-        'Fonctionnalités en développement'
-      ]
-    }
+    id: 1,
+    name: 'ChatGPT',
+    description: 'ChatGPT est un assistant IA conversationnel développé par OpenAI. Il peut vous aider dans une multitude de tâches, de la rédaction à la programmation, en passant par l\'analyse de données et la résolution de problèmes créatifs.',
+    longDescription: 'ChatGPT représente une révolution dans le domaine de l\'intelligence artificielle conversationnelle. Basé sur l\'architecture GPT (Generative Pre-trained Transformer), cet outil peut comprendre le contexte, maintenir des conversations cohérentes et fournir des réponses détaillées sur une vaste gamme de sujets. Que vous soyez étudiant, professionnel, créateur de contenu ou simplement curieux, ChatGPT s\'adapte à vos besoins spécifiques.',
+    logo: '🤖',
+    link: 'https://chatgpt.com',
+    category: 'Assistant IA',
+    price: 'Freemium',
+    rating: 4.8,
+    users: '100M+',
+    launchDate: '2022-11-30',
+    website: 'https://openai.com',
+    tags: ['Conversation', 'Assistance', 'Productivité', 'Rédaction', 'Code', 'Analyse'],
+    features: [
+      'Conversations naturelles et contextuelles',
+      'Aide à la rédaction et correction',
+      'Assistance à la programmation',
+      'Analyse et synthèse de documents',
+      'Traduction multilingue',
+      'Résolution de problèmes mathématiques'
+    ],
+    useCases: [
+      {
+        title: 'Rédaction professionnelle',
+        description: 'Créez des emails, rapports et présentations efficaces'
+      },
+      {
+        title: 'Apprentissage et formation',
+        description: 'Obtenez des explications détaillées sur n\'importe quel sujet'
+      },
+      {
+        title: 'Développement logiciel',
+        description: 'Assistance au code, débogage et explication d\'algorithmes'
+      },
+      {
+        title: 'Créativité',
+        description: 'Brainstorming, écriture créative et génération d\'idées'
+      }
+    ],
+    pricing: [
+      {
+        plan: 'Gratuit',
+        price: '0€/mois',
+        features: ['Accès limité', 'Modèle GPT-3.5', 'Support communautaire']
+      },
+      {
+        plan: 'Plus',
+        price: '20€/mois',
+        features: ['Accès prioritaire', 'GPT-4', 'Support par email', 'Plugins']
+      },
+      {
+        plan: 'Équipe',
+        price: '25€/mois/utilisateur',
+        features: ['Tout Plus', 'Gestion d\'équipe', 'Analytiques', 'Support prioritaire']
+      }
+    ],
+    pros: [
+      'Interface intuitive et facile à utiliser',
+      'Réponses de haute qualité et contextuelles',
+      'Large éventail de cas d\'usage',
+      'Mises à jour régulières et améliorations'
+    ],
+    cons: [
+      'Limitations dans la version gratuite',
+      'Peut parfois générer des informations incorrectes',
+      'Dépendant d\'une connexion internet'
+    ],
+    alternatives: [
+      { name: 'Claude', category: 'Assistant IA' },
+      { name: 'Bard', category: 'Assistant IA' },
+      { name: 'Perplexity', category: 'Recherche IA' }
+    ]
   };
-
-  const currentTool = toolData[toolSlug as keyof typeof toolData];
-
-  if (!currentTool) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
-        <Header />
-        <main className="py-16">
-          <div className="max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Outil non trouvé</h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-8">L'outil demandé n'existe pas.</p>
-            <Link to="/">
-              <Button>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Retour à l'accueil
-              </Button>
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <Header />
-      <main className="py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Navigation */}
-          <div className="mb-6">
-            <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Retour aux outils
+      <main className="py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Breadcrumb */}
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-6 sm:mb-8">
+            <Link to="/" className="hover:text-foreground transition-colors">Accueil</Link>
+            <span>/</span>
+            <Link to="/categories" className="hover:text-foreground transition-colors">Catégories</Link>
+            <span>/</span>
+            <Link to={`/categorie/${toolData.category.toLowerCase().replace(/\s+/g, '-')}`} className="hover:text-foreground transition-colors">
+              {toolData.category}
             </Link>
+            <span>/</span>
+            <span className="text-foreground">{toolData.name}</span>
           </div>
 
-          {/* En-tête de l'outil */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+          {/* Header */}
+          <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/50 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
               <div className="flex-1">
-                <div className="flex items-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
-                    <span className="text-white font-bold text-xl">
-                      {currentTool.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{currentTool.name}</h1>
-                    <div className="flex items-center space-x-4">
-                      <Badge variant="secondary" className="text-sm">
-                        {currentTool.category}
+                <div className="flex items-start gap-4 sm:gap-6 mb-4 sm:mb-6">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl flex-shrink-0">{toolData.logo}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
+                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">{toolData.name}</h1>
+                      <Badge variant="outline" className="text-xs sm:text-sm">
+                        {toolData.category}
                       </Badge>
-                      <div className="flex items-center">
-                        <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                        <span className="font-medium text-gray-900 dark:text-white">{currentTool.rating}</span>
-                        <span className="text-gray-500 dark:text-gray-400 ml-1">(2.5k avis)</span>
+                    </div>
+                    <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed mb-4">
+                      {toolData.description}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                        <span className="font-medium">{toolData.rating}</span>
+                      </div>
+                      <div className="flex items-center space-x-1 text-muted-foreground">
+                        <Users className="h-4 w-4" />
+                        <span>{toolData.users} utilisateurs</span>
+                      </div>
+                      <div className="flex items-center space-x-1 text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        <span>Lancé en {new Date(toolData.launchDate).getFullYear()}</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-                  {currentTool.description}
-                </p>
-
-                <div className="flex flex-wrap gap-3 mb-6">
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    Essayer {currentTool.name}
-                  </Button>
-                  <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
-                    <Heart className="mr-2 h-4 w-4" />
-                    Ajouter aux favoris
-                  </Button>
-                  <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
-                    <Bookmark className="mr-2 h-4 w-4" />
-                    Sauvegarder
-                  </Button>
+                <div className="flex flex-wrap gap-2">
+                  {toolData.tags.map((tag, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
               </div>
 
-              {/* Statistiques */}
-              <div className="lg:ml-8 lg:flex-shrink-0">
-                <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-                  <div className="text-center lg:text-left">
-                    <div className="flex items-center justify-center lg:justify-start mb-1">
-                      <Users className="h-4 w-4 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-500 dark:text-gray-400">Utilisateurs</span>
-                    </div>
-                    <div className="font-bold text-xl text-gray-900 dark:text-white">{currentTool.users}</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="flex items-center justify-center lg:justify-start mb-1">
-                      <Globe className="h-4 w-4 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-500 dark:text-gray-400">Prix</span>
-                    </div>
-                    <div className="font-bold text-xl text-gray-900 dark:text-white">{currentTool.pricing}</div>
-                  </div>
+              <div className="lg:w-80 flex flex-col gap-3">
+                <Button size="lg" className="w-full" onClick={() => window.open(toolData.link, '_blank')}>
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Essayer {toolData.name}
+                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Heart className="mr-2 h-4 w-4" />
+                    Favoris
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Partager
+                  </Button>
+                </div>
+                <div className="text-center">
+                  <Badge variant={toolData.price === 'Gratuit' ? 'default' : toolData.price === 'Freemium' ? 'secondary' : 'outline'}>
+                    {toolData.price}
+                  </Badge>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Contenu principal */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Description détaillée */}
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+              {/* Description */}
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">À propos de {currentTool.name}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">À propos de {toolData.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {currentTool.longDescription}
+                  <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
+                    {toolData.longDescription}
                   </p>
                 </CardContent>
               </Card>
 
-              {/* Fonctionnalités */}
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              {/* Features */}
+              <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-gray-900 dark:text-white">
+                  <CardTitle className="text-lg sm:text-xl flex items-center">
                     <Zap className="mr-2 h-5 w-5" />
                     Fonctionnalités principales
                   </CardTitle>
-                  <CardDescription className="text-gray-600 dark:text-gray-300">
-                    Découvrez ce que {currentTool.name} peut faire pour vous
-                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {currentTool.features.map((feature, index) => (
-                      <div key={index} className="flex items-start">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    {toolData.features.map((feature, index) => (
+                      <div key={index} className="flex items-start space-x-2">
+                        <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
+                        <span className="text-sm sm:text-base text-muted-foreground">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Avantages et Inconvénients */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              {/* Use Cases */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg sm:text-xl">Cas d'usage</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4 sm:space-y-6">
+                    {toolData.useCases.map((useCase, index) => (
+                      <div key={index}>
+                        <h4 className="font-semibold text-sm sm:text-base mb-2">{useCase.title}</h4>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{useCase.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Pros & Cons */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <Card>
                   <CardHeader>
-                    <CardTitle className="text-green-600 dark:text-green-400">Avantages</CardTitle>
+                    <CardTitle className="text-base sm:text-lg text-green-600 dark:text-green-400">Avantages</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
-                      {currentTool.pros.map((pro, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                          <span className="text-gray-700 dark:text-gray-300">{pro}</span>
+                      {toolData.pros.map((pro, index) => (
+                        <li key={index} className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0 mt-2"></div>
+                          <span className="text-xs sm:text-sm text-muted-foreground">{pro}</span>
                         </li>
                       ))}
                     </ul>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <Card>
                   <CardHeader>
-                    <CardTitle className="text-red-600 dark:text-red-400">Inconvénients</CardTitle>
+                    <CardTitle className="text-base sm:text-lg text-red-600 dark:text-red-400">Inconvénients</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
-                      {currentTool.cons.map((con, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                          <span className="text-gray-700 dark:text-gray-300">{con}</span>
+                      {toolData.cons.map((con, index) => (
+                        <li key={index} className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 mt-2"></div>
+                          <span className="text-xs sm:text-sm text-muted-foreground">{con}</span>
                         </li>
                       ))}
                     </ul>
@@ -493,83 +272,96 @@ const AIToolDetail = () => {
               </div>
             </div>
 
-            {/* Barre latérale */}
+            {/* Sidebar */}
             <div className="space-y-6">
-              {/* Informations de l'outil */}
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              {/* Pricing */}
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">Informations</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">Tarification</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Site web</div>
-                    <a 
-                      href={currentTool.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center"
-                    >
-                      {currentTool.website}
-                      <ExternalLink className="ml-1 h-3 w-3" />
-                    </a>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Catégorie</div>
-                    <Badge variant="secondary">{currentTool.category}</Badge>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Tarification</div>
-                    <div className="font-medium text-gray-900 dark:text-white">{currentTool.pricing}</div>
+                <CardContent>
+                  <div className="space-y-4">
+                    {toolData.pricing.map((plan, index) => (
+                      <div key={index} className="border border-border rounded-lg p-3 sm:p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-semibold text-sm sm:text-base">{plan.plan}</h4>
+                          <span className="font-bold text-sm sm:text-base text-primary">{plan.price}</span>
+                        </div>
+                        <ul className="space-y-1">
+                          {plan.features.map((feature, fIndex) => (
+                            <li key={fIndex} className="text-xs sm:text-sm text-muted-foreground flex items-center">
+                              <div className="w-1 h-1 bg-muted-foreground rounded-full mr-2"></div>
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Partage social */}
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              {/* Quick Info */}
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">Partager</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">Informations</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SocialShare
-                    url={window.location.href}
-                    title={`Découvrez ${currentTool.name}`}
-                    description={currentTool.description}
-                  />
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs sm:text-sm text-muted-foreground flex items-center">
+                        <Globe className="mr-2 h-4 w-4" />
+                        Site web
+                      </span>
+                      <Button variant="ghost" size="sm" onClick={() => window.open(toolData.website, '_blank')}>
+                        <ExternalLink className="h-3 w-3" />
+                      </Button>
+                    </div>
+                    <Separator />
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs sm:text-sm text-muted-foreground flex items-center">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Sécurité
+                      </span>
+                      <Badge variant="outline" className="text-xs">Certifiée</Badge>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
-              {/* Outils similaires */}
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              {/* Alternatives */}
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">Outils similaires</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">Alternatives</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {Object.entries(toolData)
-                      .filter(([slug]) => slug !== toolSlug)
-                      .slice(0, 3)
-                      .map(([slug, tool]) => (
-                        <Link key={slug} to={`/outil/${slug}`} className="block">
-                          <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-                              <span className="text-white font-bold text-sm">
-                                {tool.name.charAt(0)}
-                              </span>
-                            </div>
-                            <div className="flex-1">
-                              <h4 className="font-medium text-sm text-gray-900 dark:text-white">{tool.name}</h4>
-                              <div className="flex items-center">
-                                <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                                <span className="text-xs text-gray-600 dark:text-gray-400">{tool.rating}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
+                  <div className="space-y-2">
+                    {toolData.alternatives.map((alt, index) => (
+                      <Link
+                        key={index}
+                        to={`/outil/${alt.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        className="block p-2 sm:p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs sm:text-sm font-medium">{alt.name}</span>
+                          <Badge variant="outline" className="text-xs">{alt.category}</Badge>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
             </div>
+          </div>
+
+          {/* Back Button */}
+          <div className="mt-8 sm:mt-12">
+            <Link to={`/categorie/${toolData.category.toLowerCase().replace(/\s+/g, '-')}`}>
+              <Button variant="outline" className="text-sm sm:text-base">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Retour aux outils {toolData.category}
+              </Button>
+            </Link>
           </div>
         </div>
       </main>
@@ -578,4 +370,4 @@ const AIToolDetail = () => {
   );
 };
 
-export default AIToolDetail;
+export default AIToolDetailPage;
