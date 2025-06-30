@@ -1,50 +1,49 @@
 
-import React, { useState, useEffect } from 'react';
-import { Menu, X, User, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { Menu, X, User, LogOut, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 import { SearchBar } from '@/components/SearchBar';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { toast } = useToast();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const authStatus = localStorage.getItem('isAuthenticated');
-    const userData = localStorage.getItem('user');
-    
-    if (authStatus === 'true' && userData) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(userData));
-    }
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('user');
-    setIsAuthenticated(false);
-    setUser(null);
-    toast({
-      title: "Déconnexion réussie",
-      description: "À bientôt !",
-    });
+    logout();
     navigate('/');
   };
 
+  const getUserInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
+  const getDashboardPath = () => {
+    if (user?.role === 'superadmin') return '/super-admin';
+    return '/dashboard';
+  };
+
   return (
-    <header className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+    <header className="glass-effect sticky top-0 z-50 border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link to="/">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <Link to="/" className="hover-scale">
+                <h1 className="text-2xl font-bold gradient-text">
                   AI Nexus
                 </h1>
               </Link>
@@ -58,26 +57,60 @@ export const Header = () => {
 
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex space-x-6 items-center">
-            <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Accueil</Link>
-            <Link to="/categories" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Catégories</Link>
-            <Link to="/populaires" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Populaires</Link>
+            <Link to="/" className="text-foreground/80 hover:text-foreground smooth-transition">
+              Accueil
+            </Link>
+            <Link to="/categories" className="text-foreground/80 hover:text-foreground smooth-transition">
+              Catégories
+            </Link>
+            <Link to="/populaires" className="text-foreground/80 hover:text-foreground smooth-transition">
+              Populaires
+            </Link>
             
             {isAuthenticated ? (
               <>
-                <Link to="/soumettre" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Soumettre un outil</Link>
-                <Link to="/dashboard">
-                  <Button variant="outline" size="sm" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
-                    <User className="mr-2 h-4 w-4" />
-                    {user?.name}
-                  </Button>
+                <Link to="/soumettre" className="text-foreground/80 hover:text-foreground smooth-transition">
+                  Soumettre un outil
                 </Link>
-                <Button variant="ghost" size="sm" onClick={handleLogout} className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                  <LogOut className="h-4 w-4" />
-                </Button>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.avatar} alt={user?.name} />
+                        <AvatarFallback className="bg-primary text-primary-foreground">
+                          {getUserInitials(user?.name || 'U')}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 bg-background/95 backdrop-blur-sm" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{user?.name}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user?.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to={getDashboardPath()}>
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Tableau de bord</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Déconnexion</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             ) : (
               <Link to="/login">
-                <Button size="sm">
+                <Button size="sm" className="hover-scale">
                   <User className="mr-2 h-4 w-4" />
                   Connexion
                 </Button>
@@ -96,7 +129,7 @@ export const Header = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 dark:text-gray-300"
+              className="text-foreground/80"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
@@ -110,22 +143,34 @@ export const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4">
+          <div className="md:hidden pb-4 animate-slide-up">
             <nav className="flex flex-col space-y-2">
-              <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Accueil</Link>
-              <Link to="/categories" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Catégories</Link>
-              <Link to="/populaires" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Populaires</Link>
+              <Link to="/" className="text-foreground/80 hover:text-foreground smooth-transition py-2" onClick={() => setIsMenuOpen(false)}>
+                Accueil
+              </Link>
+              <Link to="/categories" className="text-foreground/80 hover:text-foreground smooth-transition py-2" onClick={() => setIsMenuOpen(false)}>
+                Catégories
+              </Link>
+              <Link to="/populaires" className="text-foreground/80 hover:text-foreground smooth-transition py-2" onClick={() => setIsMenuOpen(false)}>
+                Populaires
+              </Link>
               
               {isAuthenticated ? (
                 <>
-                  <Link to="/soumettre" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Soumettre un outil</Link>
-                  <Link to="/dashboard" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Tableau de bord</Link>
-                  <button onClick={handleLogout} className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2 text-left">
+                  <Link to="/soumettre" className="text-foreground/80 hover:text-foreground smooth-transition py-2" onClick={() => setIsMenuOpen(false)}>
+                    Soumettre un outil
+                  </Link>
+                  <Link to={getDashboardPath()} className="text-foreground/80 hover:text-foreground smooth-transition py-2" onClick={() => setIsMenuOpen(false)}>
+                    Tableau de bord
+                  </Link>
+                  <button onClick={handleLogout} className="text-foreground/80 hover:text-foreground smooth-transition py-2 text-left">
                     Déconnexion
                   </button>
                 </>
               ) : (
-                <Link to="/login" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-2">Connexion</Link>
+                <Link to="/login" className="text-foreground/80 hover:text-foreground smooth-transition py-2" onClick={() => setIsMenuOpen(false)}>
+                  Connexion
+                </Link>
               )}
             </nav>
           </div>

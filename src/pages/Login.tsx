@@ -1,217 +1,172 @@
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { LogIn, Mail, Lock, User } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Loading } from '@/components/Loading';
 
-const LoginPage = () => {
-  const { toast } = useToast();
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const { login, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: ''
-  });
+  const location = useLocation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const from = location.state?.from?.pathname || '/';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Erreur",
-        description: "Les mots de passe ne correspondent pas.",
-        variant: "destructive"
-      });
-      return;
+    const success = await login(email, password);
+    if (success) {
+      navigate(from, { replace: true });
     }
-
-    // Connexion spéciale super admin
-    if (formData.email === 'superadmin@ainexus.com' && formData.password === 'SuperAdmin2024!') {
-      const userData = {
-        name: 'Super Administrateur',
-        email: formData.email,
-        role: 'superadmin',
-        id: 'superadmin-1'
-      };
-
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('isAuthenticated', 'true');
-
-      toast({
-        title: "Connexion Super Admin réussie !",
-        description: "Bienvenue dans l'interface d'administration complète !",
-      });
-
-      navigate('/super-admin');
-      return;
-    }
-
-    // Connexion admin normale
-    if (formData.email === 'admin@ainexus.com' && formData.password === 'Admin2024!') {
-      const userData = {
-        name: 'Administrateur',
-        email: formData.email,
-        role: 'admin',
-        id: 'admin-1'
-      };
-
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('isAuthenticated', 'true');
-
-      toast({
-        title: "Connexion Admin réussie !",
-        description: "Bienvenue dans l'interface d'administration !",
-      });
-
-      navigate('/dashboard');
-      return;
-    }
-
-    // Simulation de connexion/inscription normale
-    const userData = {
-      name: formData.name || 'Utilisateur',
-      email: formData.email,
-      role: 'user',
-      id: Date.now().toString()
-    };
-
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('isAuthenticated', 'true');
-
-    toast({
-      title: isLogin ? "Connexion réussie !" : "Inscription réussie !",
-      description: `Bienvenue ${userData.name} !`,
-    });
-
-    navigate('/dashboard');
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+        <Loading text="Connexion en cours..." />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <Header />
-      <main className="py-16">
-        <div className="max-w-md mx-auto px-4">
-          <Card>
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <LogIn className="h-8 w-8 text-white" />
-              </div>
-              <CardTitle className="text-2xl">
-                {isLogin ? 'Connexion' : 'Inscription'}
-              </CardTitle>
-              <CardDescription>
-                {isLogin 
-                  ? 'Connectez-vous à votre compte AI Nexus'
-                  : 'Créez votre compte AI Nexus'
-                }
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {!isLogin && (
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nom complet</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="Votre nom"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="pl-10"
-                        required={!isLogin}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="votre@email.com"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password">Mot de passe</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Votre mot de passe"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {!isLogin && (
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="Confirmez votre mot de passe"
-                        value={formData.confirmPassword}
-                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                        className="pl-10"
-                        required={!isLogin}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <Button type="submit" className="w-full" size="lg">
-                  {isLogin ? 'Se connecter' : 'Créer un compte'}
-                </Button>
-              </form>
-
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600">
-                  {isLogin ? "Pas encore de compte ?" : "Déjà un compte ?"}
-                  <button
-                    type="button"
-                    onClick={() => setIsLogin(!isLogin)}
-                    className="ml-2 text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    {isLogin ? "S'inscrire" : "Se connecter"}
-                  </button>
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 px-4">
+      <div className="w-full max-w-md space-y-6 animate-fade-in">
+        {/* Bouton retour */}
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/')}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Retour à l'accueil
+          </Button>
         </div>
-      </main>
-      <Footer />
+
+        {/* Logo et titre */}
+        <div className="text-center space-y-2">
+          <Link to="/" className="inline-block">
+            <h1 className="text-3xl font-bold gradient-text">AI Nexus</h1>
+          </Link>
+          <p className="text-muted-foreground">
+            Connectez-vous à votre compte
+          </p>
+        </div>
+
+        {/* Formualire de connexion */}
+        <Card className="glass-effect border-2">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-center">Connexion</CardTitle>
+            <CardDescription className="text-center">
+              Entrez vos identifiants pour accéder à votre compte
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="votre@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="transition-all duration-300 focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Mot de passe</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Votre mot de passe"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="pr-10 transition-all duration-300 focus:ring-2 focus:ring-primary/20"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full hover-scale"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loading size="sm" text="" />
+                ) : (
+                  <>
+                    <LogIn className="mr-2 h-4 w-4" />
+                    Se connecter
+                  </>
+                )}
+              </Button>
+            </form>
+
+            <Separator className="my-6" />
+            
+            {/* Informations d'aide */}
+            <div className="text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Pas encore de compte ?{' '}
+                <Link to="/register" className="text-primary hover:underline font-medium">
+                  Créer un compte
+                </Link>
+              </p>
+              <Link 
+                to="/forgot-password" 
+                className="text-xs text-muted-foreground hover:text-primary hover:underline"
+              >
+                Mot de passe oublié ?
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <div className="text-center text-xs text-muted-foreground">
+          <p>
+            En vous connectant, vous acceptez nos{' '}
+            <Link to="/mentions-legales" className="hover:underline">
+              conditions d'utilisation
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default Login;
