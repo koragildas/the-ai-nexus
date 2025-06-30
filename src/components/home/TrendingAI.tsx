@@ -55,30 +55,30 @@ const trendingTools = [
 
 export const TrendingAI = () => {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+    <section className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 text-orange-600 dark:text-orange-400 px-3 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium mb-4">
-            <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 text-orange-600 dark:text-orange-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+            <TrendingUp className="h-4 w-4" />
             <span>Tendances du moment</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Outils IA en pleine croissance
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Les nouveaux outils qui font sensation dans la communauté IA
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {trendingTools.map((tool) => (
-            <Card key={tool.id} className="group hover:shadow-lg transition-all duration-300 border-border/50 bg-background/80 backdrop-blur-sm card-hover">
-              <CardHeader className="pb-3 sm:pb-4">
+            <Card key={tool.id} className="group hover:shadow-lg transition-all duration-300">
+              <CardHeader className="pb-4">
                 <div className="flex items-start justify-between mb-2">
-                  <div className="text-2xl sm:text-3xl">{tool.logo}</div>
+                  <div className="text-3xl">{tool.logo}</div>
                   <div className="flex flex-col items-end space-y-1">
                     {tool.isNew && (
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-1">
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs">
                         Nouveau
                       </Badge>
                     )}
@@ -89,34 +89,34 @@ export const TrendingAI = () => {
                   </div>
                 </div>
                 
-                <CardTitle className="text-base sm:text-lg group-hover:text-primary transition-colors">
+                <CardTitle className="text-lg group-hover:text-primary transition-colors">
                   {tool.name}
                 </CardTitle>
-                <CardDescription className="text-xs sm:text-sm line-clamp-2">
+                <CardDescription className="text-sm line-clamp-2">
                   {tool.description}
                 </CardDescription>
               </CardHeader>
               
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
                 <Badge variant="outline" className="text-xs">
                   {tool.category}
                 </Badge>
                 
-                <div className="flex items-center justify-between text-xs sm:text-sm">
+                <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center space-x-1">
-                    <Star className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 fill-current" />
+                    <Star className="h-4 w-4 text-yellow-500 fill-current" />
                     <span className="font-medium">{tool.rating}</span>
                   </div>
                   <div className="flex items-center space-x-1 text-muted-foreground">
-                    <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <Users className="h-4 w-4" />
                     <span>{tool.users}</span>
                   </div>
                 </div>
 
                 <Link to={`/outil/${tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}>
-                  <Button variant="outline" className="w-full text-xs sm:text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     Découvrir
-                    <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </CardContent>
@@ -124,9 +124,9 @@ export const TrendingAI = () => {
           ))}
         </div>
 
-        <div className="text-center mt-8 sm:mt-12">
+        <div className="text-center mt-12">
           <Link to="/tendances">
-            <Button size="lg" className="hover-scale text-sm sm:text-base">
+            <Button size="lg" className="hover-scale">
               Voir toutes les tendances
               <TrendingUp className="ml-2 h-4 w-4" />
             </Button>
