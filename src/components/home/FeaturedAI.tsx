@@ -3,10 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Star, ExternalLink, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useApprovedTools } from '@/hooks/useApprovedTools';
 
-const featuredTools = [
+// Outils statiques en vedette (conservés pour compléter l'affichage)
+const staticFeaturedTools = [
   {
-    id: 1,
+    id: 'chatgpt-static',
     name: 'ChatGPT',
     slug: 'chatgpt',
     description: 'Assistant IA conversationnel polyvalent pour l\'écriture, l\'analyse et la résolution de problèmes.',
@@ -18,7 +20,7 @@ const featuredTools = [
     featured: true
   },
   {
-    id: 2,
+    id: 'midjourney-static',
     name: 'Midjourney',
     slug: 'midjourney',
     description: 'Générateur d\'images IA de haute qualité à partir de descriptions textuelles.',
@@ -30,7 +32,7 @@ const featuredTools = [
     featured: true
   },
   {
-    id: 3,
+    id: 'github-copilot-static',
     name: 'GitHub Copilot',
     slug: 'github-copilot',
     description: 'Assistant de programmation IA qui aide les développeurs à écrire du code plus rapidement.',
@@ -44,6 +46,34 @@ const featuredTools = [
 ];
 
 export const FeaturedAI = () => {
+  const { getFeaturedTools } = useApprovedTools();
+  
+  // Récupérer les outils approuvés en vedette
+  const approvedFeaturedTools = getFeaturedTools();
+  
+  // Convertir les outils approuvés au format attendu
+  const convertedApprovedTools = approvedFeaturedTools.map(tool => ({
+    id: tool.id,
+    name: tool.name,
+    slug: tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, ''),
+    description: tool.description,
+    category: tool.category === 'assistant-ia' ? 'Assistant IA' : 
+              tool.category === 'developpement' ? 'Code' :
+              tool.category === 'redaction' ? 'Écriture' :
+              tool.category === 'image-design' ? 'Image' :
+              tool.category === 'video' ? 'Vidéo' :
+              tool.category === 'audio-musique' ? 'Audio' : 'Autre',
+    rating: tool.rating,
+    reviews: parseInt(tool.users.replace(/[^\d]/g, '')) * 1000 || 1000,
+    price: tool.price,
+    image: '/placeholder.svg',
+    featured: true,
+    isNewlyApproved: true
+  }));
+  
+  // Combiner outils approuvés et statiques, en privilégiant les approuvés
+  const allFeaturedTools = [...convertedApprovedTools, ...staticFeaturedTools].slice(0, 6);
+
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -57,15 +87,29 @@ export const FeaturedAI = () => {
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Découvrez les outils d'IA les plus appréciés par notre communauté
+            {approvedFeaturedTools.length > 0 && (
+              <span className="block mt-2 text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
+                Incluant {approvedFeaturedTools.length} outil{approvedFeaturedTools.length > 1 ? 's' : ''} récemment approuvé{approvedFeaturedTools.length > 1 ? 's' : ''}
+              </span>
+            )}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredTools.map((tool) => (
+          {allFeaturedTools.map((tool) => (
             <div
               key={tool.id}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
+              className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group relative"
             >
+              {/* Badge pour les nouveaux outils approuvés */}
+              {tool.isNewlyApproved && (
+                <div className="absolute top-2 left-2 z-10">
+                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                    Nouveau
+                  </span>
+                </div>
+              )}
+              
               <div className="aspect-video bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-xl">

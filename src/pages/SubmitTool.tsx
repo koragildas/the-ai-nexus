@@ -306,16 +306,15 @@ const SubmitToolPage = () => {
                           <SelectValue placeholder="Sélectionner une catégorie" />
                         </SelectTrigger>
                         <SelectContent className="bg-background/95 backdrop-blur-sm">
-                          <SelectItem value="writing">Écriture</SelectItem>
-                          <SelectItem value="image">Image & Design</SelectItem>
+                          <SelectItem value="assistant-ia">Assistant IA</SelectItem>
+                          <SelectItem value="developpement">Développement</SelectItem>
+                          <SelectItem value="redaction">Rédaction</SelectItem>
+                          <SelectItem value="chat-communication">Chat & Communication</SelectItem>
+                          <SelectItem value="image-design">Image & Design</SelectItem>
+                          <SelectItem value="audio-musique">Audio & Musique</SelectItem>
                           <SelectItem value="video">Vidéo</SelectItem>
-                          <SelectItem value="code">Développement</SelectItem>
-                          <SelectItem value="business">Business</SelectItem>
-                          <SelectItem value="education">Éducation</SelectItem>
-                          <SelectItem value="audio">Audio & Musique</SelectItem>
-                          <SelectItem value="chatbots">Assistant IA</SelectItem>
-                          <SelectItem value="analysis">Analyse & Calcul</SelectItem>
-                          <SelectItem value="creativity">Art & Créativité</SelectItem>
+                          <SelectItem value="analyse-calcul">Analyse & Calcul</SelectItem>
+                          <SelectItem value="art-creativite">Art & Créativité</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -327,9 +326,9 @@ const SubmitToolPage = () => {
                           <SelectValue placeholder="Modèle de prix" />
                         </SelectTrigger>
                         <SelectContent className="bg-background/95 backdrop-blur-sm">
-                          <SelectItem value="Gratuit">Gratuit</SelectItem>
-                          <SelectItem value="Freemium">Freemium</SelectItem>
-                          <SelectItem value="Payant">Payant</SelectItem>
+                          <SelectItem value="free">Gratuit</SelectItem>
+                          <SelectItem value="freemium">Freemium</SelectItem>
+                          <SelectItem value="paid">Payant</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
