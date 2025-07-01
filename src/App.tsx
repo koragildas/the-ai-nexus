@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import Index from "./pages/Index";
 import Categories from "./pages/Categories";
 import CategoryDetail from "./pages/CategoryDetail";
@@ -33,32 +34,34 @@ const queryClient = new QueryClient({
 const App = () => (
   <ThemeProvider>
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <div className="min-h-screen bg-background text-foreground smooth-transition">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/categorie/:categorySlug" element={<CategoryDetail />} />
-                <Route path="/populaires" element={<Popular />} />
-                <Route path="/soumettre" element={<SubmitTool />} />
-                <Route path="/publicite" element={<Advertise />} />
-                <Route path="/outil/:toolSlug" element={<AIToolDetail />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/super-admin" element={<SuperAdmin />} />
-                <Route path="/a-propos" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/mentions-legales" element={<LegalMentions />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </div>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
+      <FavoritesProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <div className="min-h-screen bg-background text-foreground smooth-transition">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/categorie/:categorySlug" element={<CategoryDetail />} />
+                  <Route path="/populaires" element={<Popular />} />
+                  <Route path="/soumettre" element={<SubmitTool />} />
+                  <Route path="/publicite" element={<Advertise />} />
+                  <Route path="/outil/:toolSlug" element={<AIToolDetail />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/super-admin" element={<SuperAdmin />} />
+                  <Route path="/a-propos" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/mentions-legales" element={<LegalMentions />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+            </BrowserRouter>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </FavoritesProvider>
     </AuthProvider>
   </ThemeProvider>
 );

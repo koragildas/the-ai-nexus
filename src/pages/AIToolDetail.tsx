@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
@@ -7,6 +6,8 @@ import { SocialShare } from '@/components/SocialShare';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useFavorites } from '@/contexts/FavoritesContext';
+import { useToast } from '@/hooks/use-toast';
 import { 
   ArrowLeft, 
   Star, 
@@ -21,6 +22,8 @@ import {
 
 const AIToolDetail = () => {
   const { toolSlug } = useParams();
+  const { addToFavorites, removeFromFavorites, isFavorite, addToSaved, removeFromSaved, isSaved } = useFavorites();
+  const { toast } = useToast();
 
   // Base de données complète d'outils IA avec toutes leurs informations détaillées
   const toolData = {
@@ -318,6 +321,42 @@ const AIToolDetail = () => {
 
   const currentTool = toolData[toolSlug as keyof typeof toolData];
 
+  const handleFavoriteToggle = () => {
+    if (!toolSlug) return;
+    
+    if (isFavorite(toolSlug)) {
+      removeFromFavorites(toolSlug);
+      toast({
+        title: "Retiré des favoris",
+        description: `${currentTool?.name} a été retiré de vos favoris.`,
+      });
+    } else {
+      addToFavorites(toolSlug);
+      toast({
+        title: "Ajouté aux favoris",
+        description: `${currentTool?.name} a été ajouté à vos favoris.`,
+      });
+    }
+  };
+
+  const handleSaveToggle = () => {
+    if (!toolSlug) return;
+    
+    if (isSaved(toolSlug)) {
+      removeFromSaved(toolSlug);
+      toast({
+        title: "Retiré des sauvegardés",
+        description: `${currentTool?.name} a été retiré de vos éléments sauvegardés.`,
+      });
+    } else {
+      addToSaved(toolSlug);
+      toast({
+        title: "Sauvegardé",
+        description: `${currentTool?.name} a été sauvegardé.`,
+      });
+    }
+  };
+
   if (!currentTool) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
@@ -338,6 +377,9 @@ const AIToolDetail = () => {
       </div>
     );
   }
+
+  const isToolFavorite = toolSlug ? isFavorite(toolSlug) : false;
+  const isToolSaved = toolSlug ? isSaved(toolSlug) : false;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
@@ -386,13 +428,29 @@ const AIToolDetail = () => {
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Essayer {currentTool.name}
                   </Button>
-                  <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
-                    <Heart className="mr-2 h-4 w-4" />
-                    Ajouter aux favoris
+                  <Button 
+                    variant={isToolFavorite ? "default" : "outline"} 
+                    className={`transition-all duration-200 hover:scale-105 ${
+                      isToolFavorite 
+                        ? "bg-red-500 hover:bg-red-600 text-white" 
+                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    }`}
+                    onClick={handleFavoriteToggle}
+                  >
+                    <Heart className={`mr-2 h-4 w-4 ${isToolFavorite ? "fill-current" : ""}`} />
+                    {isToolFavorite ? "Retiré des favoris" : "Ajouter aux favoris"}
                   </Button>
-                  <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300">
-                    <Bookmark className="mr-2 h-4 w-4" />
-                    Sauvegarder
+                  <Button 
+                    variant={isToolSaved ? "default" : "outline"} 
+                    className={`transition-all duration-200 hover:scale-105 ${
+                      isToolSaved 
+                        ? "bg-green-500 hover:bg-green-600 text-white" 
+                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20"
+                    }`}
+                    onClick={handleSaveToggle}
+                  >
+                    <Bookmark className={`mr-2 h-4 w-4 ${isToolSaved ? "fill-current" : ""}`} />
+                    {isToolSaved ? "Sauvegardé" : "Sauvegarder"}
                   </Button>
                 </div>
               </div>
