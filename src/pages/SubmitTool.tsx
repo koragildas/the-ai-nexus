@@ -10,8 +10,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { ImageUpload } from '@/components/ui/image-upload';
 import { PlusCircle, Send, X, Plus } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface FormData {
   name: string;
@@ -23,6 +24,7 @@ interface FormData {
   language: string;
   rating: string;
   users: string;
+  image: string;
   features: string[];
   pros: string[];
   cons: string[];
@@ -30,7 +32,6 @@ interface FormData {
 }
 
 const SubmitToolPage = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -42,6 +43,7 @@ const SubmitToolPage = () => {
     language: 'Français',
     rating: '',
     users: '',
+    image: '',
     features: [''],
     pros: [''],
     cons: [''],
@@ -51,24 +53,17 @@ const SubmitToolPage = () => {
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     if (!isAuthenticated) {
-      toast({
-        title: "Connexion requise",
-        description: "Vous devez être connecté pour soumettre un outil.",
-        variant: "destructive"
-      });
+      toast.error("Vous devez être connecté pour soumettre un outil.");
       navigate('/login');
     }
-  }, [navigate, toast]);
+  }, [navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
     // Validation des champs requis
     if (!formData.name || !formData.description || !formData.url || !formData.category || !formData.pricing) {
-      toast({
-        title: "Champs requis manquants",
-        description: "Veuillez remplir tous les champs obligatoires.",
-        variant: "destructive"
-      });
+      toast.error("Veuillez remplir tous les champs obligatoires.");
       return;
     }
 
@@ -83,10 +78,7 @@ const SubmitToolPage = () => {
 
     console.log('Données soumises:', cleanedData);
     
-    toast({
-      title: "Outil soumis avec succès !",
-      description: "Votre suggestion sera examinée par notre équipe.",
-    });
+    toast.success("Outil soumis avec succès ! Votre suggestion sera examinée par notre équipe.");
     
     // Reset du formulaire
     setFormData({
@@ -99,6 +91,7 @@ const SubmitToolPage = () => {
       language: 'Français',
       rating: '',
       users: '',
+      image: '',
       features: [''],
       pros: [''],
       cons: [''],
@@ -146,7 +139,7 @@ const SubmitToolPage = () => {
   }) => (
     <div className="space-y-2">
       <Label>{label}</Label>
-      {description && <p className="text-sm text-gray-600">{description}</p>}
+      {description && <p className="text-sm text-muted-foreground">{description}</p>}
       <div className="space-y-2">
         {(formData[field] as string[]).map((item: string, index: number) => (
           <div key={index} className="flex gap-2">
@@ -183,24 +176,24 @@ const SubmitToolPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen gradient-bg">
       <Header />
       <main className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium mb-4">
+            <div className="inline-flex items-center px-4 py-2 glass-effect rounded-full text-sm font-medium mb-4">
               <PlusCircle className="h-4 w-4 mr-2" />
               Soumettre un outil
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               Partagez un nouvel outil IA
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               Aidez la communauté en suggérant un nouvel outil d'intelligence artificielle avec tous ses détails.
             </p>
           </div>
 
-          <Card className="max-w-4xl mx-auto">
+          <Card className="glass-effect">
             <CardHeader>
               <CardTitle>Informations complètes sur l'outil</CardTitle>
               <CardDescription>
@@ -209,9 +202,25 @@ const SubmitToolPage = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Image de l'outil */}
+                <div className="space-y-6">
+                  <h3 className="text-lg font-semibold text-foreground">Image de l'outil</h3>
+                  <div className="space-y-2">
+                    <Label>Logo ou capture d'écran de l'outil</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Ajoutez une image représentative de l'outil (logo, interface, etc.)
+                    </p>
+                    <ImageUpload
+                      value={formData.image}
+                      onChange={(value) => handleInputChange('image', value)}
+                      onRemove={() => handleInputChange('image', '')}
+                    />
+                  </div>
+                </div>
+
                 {/* Informations de base */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Informations de base</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Informations de base</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -264,7 +273,7 @@ const SubmitToolPage = () => {
 
                 {/* Catégorisation */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Catégorisation</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Catégorisation</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
@@ -334,7 +343,7 @@ const SubmitToolPage = () => {
 
                 {/* Fonctionnalités */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold text-gray-900">Caractéristiques détaillées</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Caractéristiques détaillées</h3>
                   
                   <ArrayInput
                     field="features"
@@ -368,7 +377,7 @@ const SubmitToolPage = () => {
                 </div>
 
                 <div className="pt-6 border-t">
-                  <Button type="submit" className="w-full" size="lg">
+                  <Button type="submit" className="w-full btn-primary" size="lg">
                     Soumettre l'outil complet
                     <Send className="ml-2 h-4 w-4" />
                   </Button>

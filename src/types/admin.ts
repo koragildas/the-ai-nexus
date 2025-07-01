@@ -19,6 +19,7 @@ export interface SubmittedTool {
   pricing: string;
   rating: string;
   users: string;
+  image?: string;
   features: string[];
   pros: string[];
   cons: string[];

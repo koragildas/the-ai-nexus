@@ -19,13 +19,13 @@ import {
   Search,
   Filter,
   Trash2,
-  RotateCcw
+  RotateCcw,
+  Image as ImageIcon
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { SubmittedTool } from '@/types/admin';
 
 export const ToolSubmissions = () => {
-  const { toast } = useToast();
   const [selectedTool, setSelectedTool] = useState<SubmittedTool | null>(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
@@ -33,7 +33,7 @@ export const ToolSubmissions = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
-  // Données simulées des soumissions
+  // Données simulées des soumissions avec images
   const [submissions, setSubmissions] = useState<SubmittedTool[]>([
     {
       id: '1',
@@ -45,6 +45,7 @@ export const ToolSubmissions = () => {
       pricing: 'Freemium',
       rating: '4.5',
       users: '50K+',
+      image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop',
       features: ['Génération de contenu', 'Correction grammaticale', 'Traduction'],
       pros: ['Interface intuitive', 'Résultats de qualité'],
       cons: ['Version gratuite limitée'],
@@ -63,6 +64,7 @@ export const ToolSubmissions = () => {
       pricing: 'Payant',
       rating: '4.8',
       users: '100K+',
+      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
       features: ['Génération d\'images', 'Styles multiples', 'Haute résolution'],
       pros: ['Qualité exceptionnelle', 'Rapide'],
       cons: ['Prix élevé'],
@@ -136,21 +138,13 @@ export const ToolSubmissions = () => {
         : tool
     ));
     
-    toast({
-      title: "Outil approuvé",
-      description: "L'outil a été approuvé et publié sur la plateforme.",
-    });
-    
+    toast.success("Outil approuvé et publié sur la plateforme.");
     setIsReviewDialogOpen(false);
   };
 
   const handleRejection = (toolId: string) => {
     if (!rejectionReason.trim()) {
-      toast({
-        title: "Raison requise",
-        description: "Veuillez indiquer la raison du rejet.",
-        variant: "destructive"
-      });
+      toast.error("Veuillez indiquer la raison du rejet.");
       return;
     }
 
@@ -166,22 +160,14 @@ export const ToolSubmissions = () => {
         : tool
     ));
     
-    toast({
-      title: "Outil rejeté",
-      description: "L'outil a été rejeté avec la raison fournie.",
-    });
-    
+    toast.success("Outil rejeté avec la raison fournie.");
     setRejectionReason('');
     setIsReviewDialogOpen(false);
   };
 
   const handleDeleteSubmission = (toolId: string, toolName: string) => {
     setSubmissions(submissions.filter(tool => tool.id !== toolId));
-    
-    toast({
-      title: "Soumission supprimée",
-      description: `${toolName} a été supprimé définitivement.`,
-    });
+    toast.success(`${toolName} a été supprimé définitivement.`);
   };
 
   const handleResetToReview = (toolId: string) => {
@@ -197,20 +183,14 @@ export const ToolSubmissions = () => {
         : tool
     ));
     
-    toast({
-      title: "Statut réinitialisé",
-      description: "L'outil a été remis en attente de révision.",
-    });
+    toast.success("L'outil a été remis en attente de révision.");
   };
 
   const clearFilters = () => {
     setSearchTerm('');
     setStatusFilter('all');
     setCategoryFilter('all');
-    toast({
-      title: "Filtres effacés",
-      description: "Tous les filtres ont été réinitialisés.",
-    });
+    toast.success("Tous les filtres ont été réinitialisés.");
   };
 
   const getStatusBadge = (status: string) => {
@@ -247,7 +227,7 @@ export const ToolSubmissions = () => {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="glass-effect">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -269,17 +249,17 @@ export const ToolSubmissions = () => {
           
           {/* Statistiques rapides */}
           <div className="grid grid-cols-3 gap-4 mt-4">
-            <div className="text-center p-3 bg-yellow-50 rounded-lg border">
+            <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border">
               <div className="text-2xl font-bold text-yellow-600">{getPendingCount()}</div>
-              <div className="text-sm text-yellow-700">En attente</div>
+              <div className="text-sm text-yellow-700 dark:text-yellow-400">En attente</div>
             </div>
-            <div className="text-center p-3 bg-green-50 rounded-lg border">
+            <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border">
               <div className="text-2xl font-bold text-green-600">{getApprovedCount()}</div>
-              <div className="text-sm text-green-700">Approuvés</div>
+              <div className="text-sm text-green-700 dark:text-green-400">Approuvés</div>
             </div>
-            <div className="text-center p-3 bg-red-50 rounded-lg border">
+            <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border">
               <div className="text-2xl font-bold text-red-600">{getRejectedCount()}</div>
-              <div className="text-sm text-red-700">Rejetés</div>
+              <div className="text-sm text-red-700 dark:text-red-400">Rejetés</div>
             </div>
           </div>
         </CardHeader>
@@ -287,7 +267,7 @@ export const ToolSubmissions = () => {
           {/* Filtres et recherche */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Rechercher par nom, description ou soumetteur..."
                 value={searchTerm}
@@ -344,23 +324,38 @@ export const ToolSubmissions = () => {
               {filteredSubmissions.map((tool) => (
                 <TableRow key={tool.id}>
                   <TableCell>
-                    <div>
-                      <div className="font-medium text-gray-900 flex items-center">
-                        {tool.name}
-                        <a 
-                          href={tool.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="ml-2 text-blue-500 hover:text-blue-700"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
+                    <div className="flex items-center space-x-3">
+                      <div className="flex-shrink-0">
+                        {tool.image ? (
+                          <img 
+                            src={tool.image} 
+                            alt={tool.name}
+                            className="h-12 w-12 object-cover rounded-lg border"
+                          />
+                        ) : (
+                          <div className="h-12 w-12 bg-muted rounded-lg border flex items-center justify-center">
+                            <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                          </div>
+                        )}
                       </div>
-                      <div className="text-sm text-gray-500 truncate max-w-md">
-                        {tool.description}
-                      </div>
-                      <div className="text-xs text-gray-400 mt-1">
-                        Par: {tool.submittedBy}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-foreground flex items-center">
+                          {tool.name}
+                          <a 
+                            href={tool.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="ml-2 text-primary hover:text-primary/80"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        </div>
+                        <div className="text-sm text-muted-foreground truncate max-w-md">
+                          {tool.description}
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Par: {tool.submittedBy}
+                        </div>
                       </div>
                     </div>
                   </TableCell>
@@ -370,7 +365,7 @@ export const ToolSubmissions = () => {
                   <TableCell>
                     {getStatusBadge(tool.status)}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-muted-foreground">
                     {formatDate(tool.submittedAt)}
                   </TableCell>
                   <TableCell>
@@ -387,7 +382,7 @@ export const ToolSubmissions = () => {
                             <Eye className="h-4 w-4" />
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle>Révision de l'outil: {tool.name}</DialogTitle>
                             <DialogDescription>
@@ -397,27 +392,42 @@ export const ToolSubmissions = () => {
                           
                           {selectedTool && (
                             <div className="space-y-4">
-                              <div className="grid grid-cols-2 gap-4">
+                              {/* Image de l'outil */}
+                              {selectedTool.image && (
                                 <div>
-                                  <Label className="font-semibold">URL:</Label>
-                                  <p className="text-sm text-blue-600">
-                                    <a href={selectedTool.url} target="_blank" rel="noopener noreferrer">
-                                      {selectedTool.url}
-                                    </a>
-                                  </p>
+                                  <Label className="font-semibold">Image de l'outil:</Label>
+                                  <div className="mt-2">
+                                    <img 
+                                      src={selectedTool.image} 
+                                      alt={selectedTool.name}
+                                      className="w-full max-w-md h-48 object-cover rounded-lg border"
+                                    />
+                                  </div>
                                 </div>
-                                <div>
-                                  <Label className="font-semibold">Catégorie:</Label>
-                                  <p className="text-sm">{selectedTool.category}</p>
-                                </div>
-                                <div>
-                                  <Label className="font-semibold">Prix:</Label>
-                                  <p className="text-sm">{selectedTool.pricing}</p>
-                                </div>
-                                <div>
-                                  <Label className="font-semibold">Utilisateurs:</Label>
-                                  <p className="text-sm">{selectedTool.users}</p>
-                                </div>
+                              )}
+                              
+                              <div>
+                                <Label className="font-semibold">URL:</Label>
+                                <p className="text-sm text-primary">
+                                  <a href={selectedTool.url} target="_blank" rel="noopener noreferrer">
+                                    {selectedTool.url}
+                                  </a>
+                                </p>
+                              </div>
+                              
+                              <div>
+                                <Label className="font-semibold">Catégorie:</Label>
+                                <p className="text-sm">{selectedTool.category}</p>
+                              </div>
+                              
+                              <div>
+                                <Label className="font-semibold">Prix:</Label>
+                                <p className="text-sm">{selectedTool.pricing}</p>
+                              </div>
+                              
+                              <div>
+                                <Label className="font-semibold">Utilisateurs:</Label>
+                                <p className="text-sm">{selectedTool.users}</p>
                               </div>
                               
                               <div>
@@ -503,9 +513,9 @@ export const ToolSubmissions = () => {
                               )}
                               
                               {selectedTool.status === 'rejected' && selectedTool.rejectionReason && (
-                                <div className="p-3 bg-red-50 border border-red-200 rounded">
-                                  <Label className="font-semibold text-red-800">Raison du rejet:</Label>
-                                  <p className="text-sm text-red-700 mt-1">{selectedTool.rejectionReason}</p>
+                                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded">
+                                  <Label className="font-semibold text-red-800 dark:text-red-400">Raison du rejet:</Label>
+                                  <p className="text-sm text-red-700 dark:text-red-300 mt-1">{selectedTool.rejectionReason}</p>
                                 </div>
                               )}
                             </div>
@@ -561,7 +571,7 @@ export const ToolSubmissions = () => {
           </Table>
 
           {filteredSubmissions.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted-foreground">
               {searchTerm || statusFilter !== 'all' || categoryFilter !== 'all'
                 ? 'Aucune soumission ne correspond aux critères de recherche.'
                 : 'Aucune soumission trouvée.'
