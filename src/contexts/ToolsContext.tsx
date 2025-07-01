@@ -1,10 +1,9 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { SubmittedTool } from '@/types/admin';
 
 interface ToolsContextType {
   tools: SubmittedTool[];
-  addTool: (tool: Omit<SubmittedTool, 'id' | 'submittedAt' | 'status'>) => void;
+  addTool: (tool: Omit<SubmittedTool, 'id' | 'submittedAt' | 'status' | 'submittedBy'>) => void;
   updateToolStatus: (toolId: string, status: 'approved' | 'rejected', reviewData?: { reviewedBy: string; rejectionReason?: string }) => void;
   deleteTool: (toolId: string) => void;
   getToolsByStatus: (status: 'pending' | 'approved' | 'rejected') => SubmittedTool[];
@@ -91,7 +90,6 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
     }
   ]);
 
-  // Charger les données depuis localStorage au démarrage
   useEffect(() => {
     const savedTools = localStorage.getItem('ainexus-tools');
     if (savedTools) {
@@ -103,12 +101,11 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
     }
   }, []);
 
-  // Sauvegarder les données dans localStorage à chaque changement
   useEffect(() => {
     localStorage.setItem('ainexus-tools', JSON.stringify(tools));
   }, [tools]);
 
-  const addTool = (toolData: Omit<SubmittedTool, 'id' | 'submittedAt' | 'status'>) => {
+  const addTool = (toolData: Omit<SubmittedTool, 'id' | 'submittedAt' | 'status' | 'submittedBy'>) => {
     const newTool: SubmittedTool = {
       ...toolData,
       id: Date.now().toString(),

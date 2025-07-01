@@ -7,11 +7,13 @@ import { Loading } from '@/components/Loading';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole?: 'user' | 'admin' | 'superadmin';
+  requireSuperAdmin?: boolean;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   children, 
-  requiredRole 
+  requiredRole,
+  requireSuperAdmin 
 }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
   const location = useLocation();
@@ -26,6 +28,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Check for super admin requirement
+  if (requireSuperAdmin && user?.role !== 'superadmin') {
+    return <Navigate to="/" replace />;
   }
 
   if (requiredRole) {
