@@ -1,77 +1,42 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Zap, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SearchBar } from '@/components/SearchBar';
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Hero = () => {
   return (
-    <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20" />
-      <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-blue-200/30 dark:bg-blue-800/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-36 h-36 bg-purple-200/30 dark:bg-purple-800/20 rounded-full blur-3xl" />
-      
-      <div className="relative max-w-7xl mx-auto">
-        <div className="text-center space-y-8">
-          {/* Badge */}
-          <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium animate-bounce-in">
-            <Sparkles className="h-4 w-4" />
-            <span>Découvrez les meilleurs outils IA</span>
-          </div>
-
-          {/* Main heading */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight animate-fade-in">
-            <span className="gradient-text">AI Nexus</span>
-            <br />
-            <span className="text-2xl md:text-4xl lg:text-5xl font-normal text-muted-foreground mt-4 block">
-              Votre guide des outils IA
-            </span>
-          </h1>
-
-          {/* Description */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-slide-up">
-            Explorez, comparez et choisissez parmi plus de 500 outils d'intelligence artificielle. 
-            Trouvez la solution parfaite pour vos projets créatifs et professionnels.
-          </p>
-
-          {/* Search bar */}
-          <div className="max-w-xl mx-auto animate-slide-up">
-            <SearchBar className="w-full" />
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 animate-slide-up">
-            <Link to="/categories">
-              <Button size="lg" className="hover-scale">
-                Explorer les catégories
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/populaires">
-              <Button variant="outline" size="lg" className="hover-scale">
-                Outils populaires
-                <Zap className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto pt-12 animate-bounce-in">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">500+</div>
-              <div className="text-sm text-muted-foreground">Outils référencés</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">15</div>
-              <div className="text-sm text-muted-foreground">Catégories</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary mb-2">100%</div>
-              <div className="text-sm text-muted-foreground">Gratuit</div>
-            </div>
-          </div>
+    <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto text-center">
+        <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-8">
+          <Sparkles className="h-4 w-4 mr-2" />
+          Plus de 1000+ outils IA référencés
+        </div>
+        
+        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          Découvrez les meilleurs{' '}
+          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            outils d'IA
+          </span>
+        </h1>
+        
+        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          La plateforme de référence pour explorer, comparer et découvrir 
+          les outils d'intelligence artificielle qui transformeront votre workflow.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link to="/categories">
+            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+              Explorer les outils
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+          <Link to="/soumettre">
+            <Button variant="outline" size="lg">
+              Soumettre un outil
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,136 +1,59 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { TrendingUp, Star, Users, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { TrendingUp, Star } from 'lucide-react';
 
 const trendingTools = [
-  {
-    id: 1,
-    name: 'Suno AI',
-    description: 'Générez de la musique complète avec paroles grâce à l\'IA',
-    logo: '🎵',
-    category: 'Audio & Musique',
-    rating: 4.6,
-    users: '1M+',
-    trend: '+250%',
-    isNew: true
-  },
-  {
-    id: 2,
-    name: 'Claude 3',
-    description: 'Le nouvel assistant IA d\'Anthropic aux capacités avancées',
-    logo: '🧠',
-    category: 'Assistant IA',
-    rating: 4.7,
-    users: '10M+',
-    trend: '+180%',
-    isNew: false
-  },
-  {
-    id: 3,
-    name: 'Leonardo AI',
-    description: 'Génération d\'images avec contrôle créatif avancé',
-    logo: '🖼️',
-    category: 'Image & Design',
-    rating: 4.5,
-    users: '2M+',
-    trend: '+300%',
-    isNew: true
-  },
-  {
-    id: 4,
-    name: 'Cursor',
-    description: 'Éditeur de code IA pour développeurs modernes',
-    logo: '⚡',
-    category: 'Développement',
-    rating: 4.7,
-    users: '500K+',
-    trend: '+400%',
-    isNew: true
-  }
+  { name: 'Claude 3', category: 'Écriture', rating: 4.8, trend: '+245%' },
+  { name: 'Runway ML', category: 'Vidéo', rating: 4.6, trend: '+189%' },
+  { name: 'ElevenLabs', category: 'Audio', rating: 4.7, trend: '+156%' },
+  { name: 'Perplexity', category: 'Recherche', rating: 4.5, trend: '+134%' },
+  { name: 'Cursor', category: 'Code', rating: 4.9, trend: '+123%' }
 ];
 
 export const TrendingAI = () => {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8">
+    <section className="py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 text-orange-600 dark:text-orange-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <TrendingUp className="h-4 w-4" />
-            <span>Tendances du moment</span>
+          <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium mb-4">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Tendances
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Outils IA en pleine croissance
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Outils IA en forte croissance
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Les nouveaux outils qui font sensation dans la communauté IA
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Les outils qui gagnent en popularité cette semaine
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {trendingTools.map((tool) => (
-            <Card key={tool.id} className="group hover:shadow-lg transition-all duration-300">
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="text-3xl">{tool.logo}</div>
-                  <div className="flex flex-col items-end space-y-1">
-                    {tool.isNew && (
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs">
-                        Nouveau
-                      </Badge>
-                    )}
-                    <div className="flex items-center space-x-1 text-xs text-green-600 dark:text-green-400 font-medium">
-                      <TrendingUp className="h-3 w-3" />
-                      <span>{tool.trend}</span>
-                    </div>
-                  </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          {trendingTools.map((tool, index) => (
+            <div
+              key={tool.name}
+              className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm mr-4">
+                  {index + 1}
                 </div>
-                
-                <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                  {tool.name}
-                </CardTitle>
-                <CardDescription className="text-sm line-clamp-2">
-                  {tool.description}
-                </CardDescription>
-              </CardHeader>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{tool.name}</h3>
+                  <p className="text-sm text-gray-600">{tool.category}</p>
+                </div>
+              </div>
               
-              <CardContent className="space-y-4">
-                <Badge variant="outline" className="text-xs">
-                  {tool.category}
-                </Badge>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center space-x-1">
-                    <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                    <span className="font-medium">{tool.rating}</span>
-                  </div>
-                  <div className="flex items-center space-x-1 text-muted-foreground">
-                    <Users className="h-4 w-4" />
-                    <span>{tool.users}</span>
-                  </div>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                  <span className="text-sm text-gray-700">{tool.rating}</span>
                 </div>
-
-                <Link to={`/outil/${tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}>
-                  <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    Découvrir
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+                <div className="text-sm font-semibold text-green-600">
+                  {tool.trend}
+                </div>
+              </div>
+            </div>
           ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <Link to="/tendances">
-            <Button size="lg" className="hover-scale">
-              Voir toutes les tendances
-              <TrendingUp className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
         </div>
       </div>
     </section>
