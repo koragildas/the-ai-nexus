@@ -152,7 +152,7 @@ const CategoriesPage = () => {
               {filteredCategories.map((category) => {
                 const IconComponent = category.icon;
                 return (
-                  <Link key={category.id} to={`/categorie/${category.slug}`}>
+                  <Link key={category.id} to={`/categories/${category.slug}`}>
                     <Card className="group hover:shadow-lg dark:hover:shadow-gray-700/50 transition-all duration-300 cursor-pointer hover:-translate-y-1 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-full">
                       <CardHeader className="pb-4">
                         <div className="flex items-center justify-between">

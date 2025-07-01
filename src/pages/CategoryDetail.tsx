@@ -594,7 +594,7 @@ const CategoryDetailPage = () => {
                       
                       <div className="flex gap-2">
                         <Link 
-                          to={`/outil/${tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}
+                          to={`/outils/${tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}
                           className="flex-1"
                         >
                           <Button 
