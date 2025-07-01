@@ -5,8 +5,22 @@ import { Star, ExternalLink, Crown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApprovedTools } from '@/hooks/useApprovedTools';
 
+interface FeaturedToolType {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  rating: number;
+  reviews: number;
+  price: string;
+  image: string;
+  featured: boolean;
+  isNewlyApproved?: boolean;
+}
+
 // Outils statiques en vedette (conservés pour compléter l'affichage)
-const staticFeaturedTools = [
+const staticFeaturedTools: FeaturedToolType[] = [
   {
     id: 'chatgpt-static',
     name: 'ChatGPT',
@@ -52,7 +66,7 @@ export const FeaturedAI = () => {
   const approvedFeaturedTools = getFeaturedTools();
   
   // Convertir les outils approuvés au format attendu
-  const convertedApprovedTools = approvedFeaturedTools.map(tool => ({
+  const convertedApprovedTools: FeaturedToolType[] = approvedFeaturedTools.map(tool => ({
     id: tool.id,
     name: tool.name,
     slug: tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, ''),
