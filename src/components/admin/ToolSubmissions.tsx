@@ -23,9 +23,11 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTools } from '@/contexts/ToolsContext';
 import { SubmittedTool } from '@/types/admin';
 
 export const ToolSubmissions = () => {
+  const { tools, updateToolStatus, deleteTool } = useTools();
   const [selectedTool, setSelectedTool] = useState<SubmittedTool | null>(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
@@ -33,90 +35,7 @@ export const ToolSubmissions = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
 
-  // Données simulées des soumissions avec images
-  const [submissions, setSubmissions] = useState<SubmittedTool[]>([
-    {
-      id: '1',
-      name: 'Nova AI Writer',
-      description: 'Un assistant d\'écriture IA avancé pour la création de contenu',
-      longDescription: 'Nova AI Writer utilise les dernières technologies d\'IA pour créer du contenu de haute qualité...',
-      url: 'https://nova-ai-writer.com',
-      category: 'writing',
-      pricing: 'Freemium',
-      rating: '4.5',
-      users: '50K+',
-      image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop',
-      features: ['Génération de contenu', 'Correction grammaticale', 'Traduction'],
-      pros: ['Interface intuitive', 'Résultats de qualité'],
-      cons: ['Version gratuite limitée'],
-      tags: ['écriture', 'contenu', 'IA'],
-      status: 'pending',
-      submittedBy: 'user@example.com',
-      submittedAt: '2024-01-20T10:00:00Z'
-    },
-    {
-      id: '2',
-      name: 'AI Image Generator Pro',
-      description: 'Générateur d\'images IA professionnel',
-      longDescription: 'Créez des images époustouflantes avec notre IA de pointe...',
-      url: 'https://ai-image-pro.com',
-      category: 'image',
-      pricing: 'Payant',
-      rating: '4.8',
-      users: '100K+',
-      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
-      features: ['Génération d\'images', 'Styles multiples', 'Haute résolution'],
-      pros: ['Qualité exceptionnelle', 'Rapide'],
-      cons: ['Prix élevé'],
-      tags: ['image', 'génération', 'art'],
-      status: 'approved',
-      submittedBy: 'admin@example.com',
-      submittedAt: '2024-01-19T14:30:00Z',
-      reviewedBy: 'superadmin@ainexus.com',
-      reviewedAt: '2024-01-19T16:00:00Z'
-    },
-    {
-      id: '3',
-      name: 'Spam AI Tool',
-      description: 'Outil suspect avec peu de valeur',
-      longDescription: 'Description très courte et peu détaillée...',
-      url: 'https://suspicious-tool.com',
-      category: 'business',
-      pricing: 'Gratuit',
-      rating: '2.0',
-      users: '10',
-      features: ['Fonctionnalité basique'],
-      pros: ['Gratuit'],
-      cons: ['Qualité douteuse', 'Interface pauvre'],
-      tags: ['business'],
-      status: 'rejected',
-      submittedBy: 'spam@example.com',
-      submittedAt: '2024-01-18T09:00:00Z',
-      reviewedBy: 'admin@ainexus.com',
-      reviewedAt: '2024-01-18T11:00:00Z',
-      rejectionReason: 'Qualité insuffisante et contenu suspect'
-    },
-    {
-      id: '4',
-      name: 'Voice AI Assistant',
-      description: 'Assistant vocal intelligent pour les entreprises',
-      longDescription: 'Un assistant vocal IA qui peut gérer les appels clients...',
-      url: 'https://voice-ai-assistant.com',
-      category: 'voice',
-      pricing: 'Payant',
-      rating: '4.2',
-      users: '25K+',
-      features: ['Reconnaissance vocale', 'Réponses automatiques', 'Intégration CRM'],
-      pros: ['Très naturel', 'Facile à intégrer'],
-      cons: ['Coût élevé', 'Langues limitées'],
-      tags: ['vocal', 'assistant', 'entreprise'],
-      status: 'pending',
-      submittedBy: 'voice@example.com',
-      submittedAt: '2024-01-21T08:30:00Z'
-    }
-  ]);
-
-  const filteredSubmissions = submissions.filter(tool => {
+  const filteredSubmissions = tools.filter(tool => {
     const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          tool.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          tool.submittedBy.toLowerCase().includes(searchTerm.toLowerCase());
@@ -127,17 +46,7 @@ export const ToolSubmissions = () => {
   });
 
   const handleApproval = (toolId: string) => {
-    setSubmissions(submissions.map(tool => 
-      tool.id === toolId 
-        ? { 
-            ...tool, 
-            status: 'approved', 
-            reviewedBy: 'superadmin@ainexus.com', 
-            reviewedAt: new Date().toISOString() 
-          }
-        : tool
-    ));
-    
+    updateToolStatus(toolId, 'approved', { reviewedBy: 'admin@ainexus.com' });
     toast.success("Outil approuvé et publié sur la plateforme.");
     setIsReviewDialogOpen(false);
   };
@@ -148,17 +57,10 @@ export const ToolSubmissions = () => {
       return;
     }
 
-    setSubmissions(submissions.map(tool => 
-      tool.id === toolId 
-        ? { 
-            ...tool, 
-            status: 'rejected', 
-            reviewedBy: 'superadmin@ainexus.com', 
-            reviewedAt: new Date().toISOString(),
-            rejectionReason: rejectionReason
-          }
-        : tool
-    ));
+    updateToolStatus(toolId, 'rejected', { 
+      reviewedBy: 'admin@ainexus.com', 
+      rejectionReason: rejectionReason 
+    });
     
     toast.success("Outil rejeté avec la raison fournie.");
     setRejectionReason('');
@@ -166,23 +68,12 @@ export const ToolSubmissions = () => {
   };
 
   const handleDeleteSubmission = (toolId: string, toolName: string) => {
-    setSubmissions(submissions.filter(tool => tool.id !== toolId));
+    deleteTool(toolId);
     toast.success(`${toolName} a été supprimé définitivement.`);
   };
 
   const handleResetToReview = (toolId: string) => {
-    setSubmissions(submissions.map(tool => 
-      tool.id === toolId 
-        ? { 
-            ...tool, 
-            status: 'pending',
-            reviewedBy: undefined,
-            reviewedAt: undefined,
-            rejectionReason: undefined
-          }
-        : tool
-    ));
-    
+    updateToolStatus(toolId, 'pending' as any, { reviewedBy: '' });
     toast.success("L'outil a été remis en attente de révision.");
   };
 
@@ -221,9 +112,9 @@ export const ToolSubmissions = () => {
     });
   };
 
-  const getPendingCount = () => submissions.filter(tool => tool.status === 'pending').length;
-  const getApprovedCount = () => submissions.filter(tool => tool.status === 'approved').length;
-  const getRejectedCount = () => submissions.filter(tool => tool.status === 'rejected').length;
+  const getPendingCount = () => tools.filter(tool => tool.status === 'pending').length;
+  const getApprovedCount = () => tools.filter(tool => tool.status === 'approved').length;
+  const getRejectedCount = () => tools.filter(tool => tool.status === 'rejected').length;
 
   return (
     <div className="space-y-6">
@@ -305,7 +196,7 @@ export const ToolSubmissions = () => {
                 <SelectItem value="writing">Écriture</SelectItem>
                 <SelectItem value="image">Image</SelectItem>
                 <SelectItem value="business">Business</SelectItem>
-                <SelectItem value="voice">Vocal</SelectItem>
+                <SelectItem value="chatbots">Assistant IA</SelectItem>
               </SelectContent>
             </Select>
           </div>

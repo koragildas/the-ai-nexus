@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
@@ -13,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { PlusCircle, Send, X, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTools } from '@/contexts/ToolsContext';
 
 interface FormData {
   name: string;
@@ -21,7 +21,6 @@ interface FormData {
   url: string;
   category: string;
   pricing: string;
-  language: string;
   rating: string;
   users: string;
   image: string;
@@ -33,6 +32,7 @@ interface FormData {
 
 const SubmitToolPage = () => {
   const navigate = useNavigate();
+  const { addTool } = useTools();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     description: '',
@@ -40,7 +40,6 @@ const SubmitToolPage = () => {
     url: '',
     category: '',
     pricing: '',
-    language: 'Français',
     rating: '',
     users: '',
     image: '',
@@ -76,7 +75,8 @@ const SubmitToolPage = () => {
       tags: formData.tags.filter(t => t.trim() !== '')
     };
 
-    console.log('Données soumises:', cleanedData);
+    // Ajouter l'outil via le contexte
+    addTool(cleanedData);
     
     toast.success("Outil soumis avec succès ! Votre suggestion sera examinée par notre équipe.");
     
@@ -88,7 +88,6 @@ const SubmitToolPage = () => {
       url: '',
       category: '',
       pricing: '',
-      language: 'Français',
       rating: '',
       users: '',
       image: '',
@@ -97,6 +96,11 @@ const SubmitToolPage = () => {
       cons: [''],
       tags: ['']
     });
+
+    // Redirection vers le tableau de bord après soumission
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 2000);
   };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
