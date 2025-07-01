@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 const AIToolDetail = () => {
-  const { toolSlug } = useParams();
+  const { slug } = useParams();
   const { addToFavorites, removeFromFavorites, isFavorite, addToSaved, removeFromSaved, isSaved } = useFavorites();
   const { toast } = useToast();
 
@@ -319,19 +319,19 @@ const AIToolDetail = () => {
     }
   };
 
-  const currentTool = toolData[toolSlug as keyof typeof toolData];
+  const currentTool = toolData[slug as keyof typeof toolData];
 
   const handleFavoriteToggle = () => {
-    if (!toolSlug) return;
+    if (!slug) return;
     
-    if (isFavorite(toolSlug)) {
-      removeFromFavorites(toolSlug);
+    if (isFavorite(slug)) {
+      removeFromFavorites(slug);
       toast({
         title: "Retiré des favoris",
         description: `${currentTool?.name} a été retiré de vos favoris.`,
       });
     } else {
-      addToFavorites(toolSlug);
+      addToFavorites(slug);
       toast({
         title: "Ajouté aux favoris",
         description: `${currentTool?.name} a été ajouté à vos favoris.`,
@@ -340,16 +340,16 @@ const AIToolDetail = () => {
   };
 
   const handleSaveToggle = () => {
-    if (!toolSlug) return;
+    if (!slug) return;
     
-    if (isSaved(toolSlug)) {
-      removeFromSaved(toolSlug);
+    if (isSaved(slug)) {
+      removeFromSaved(slug);
       toast({
         title: "Retiré des sauvegardés",
         description: `${currentTool?.name} a été retiré de vos éléments sauvegardés.`,
       });
     } else {
-      addToSaved(toolSlug);
+      addToSaved(slug);
       toast({
         title: "Sauvegardé",
         description: `${currentTool?.name} a été sauvegardé.`,
@@ -378,8 +378,8 @@ const AIToolDetail = () => {
     );
   }
 
-  const isToolFavorite = toolSlug ? isFavorite(toolSlug) : false;
-  const isToolSaved = toolSlug ? isSaved(toolSlug) : false;
+  const isToolFavorite = slug ? isFavorite(slug) : false;
+  const isToolSaved = slug ? isSaved(slug) : false;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
@@ -604,10 +604,10 @@ const AIToolDetail = () => {
                 <CardContent>
                   <div className="space-y-3">
                     {Object.entries(toolData)
-                      .filter(([slug]) => slug !== toolSlug)
+                      .filter(([toolSlug]) => toolSlug !== slug)
                       .slice(0, 3)
-                      .map(([slug, tool]) => (
-                        <Link key={slug} to={`/outil/${slug}`} className="block">
+                      .map(([toolSlug, tool]) => (
+                        <Link key={toolSlug} to={`/outils/${toolSlug}`} className="block">
                           <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
                               <span className="text-white font-bold text-sm">

@@ -117,7 +117,7 @@ export const AIToolCard: React.FC<AIToolCardProps> = ({ tool, className = '' }) 
             </Button>
             
             <Button size="sm" asChild className="hover-scale">
-              <Link to={`/outil/${tool.id}`}>
+              <Link to={`/outils/${tool.id}`}>
                 Voir détails
               </Link>
             </Button>

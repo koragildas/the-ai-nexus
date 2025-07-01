@@ -117,7 +117,7 @@ export const FeaturedAI = () => {
                   </div>
                 </div>
 
-                <Link to={`/outil/${tool.slug}`}>
+                <Link to={`/outils/${tool.slug}`}>
                   <Button className="w-full group-hover:bg-blue-600 transition-colors">
                     Découvrir
                     <ExternalLink className="ml-2 h-4 w-4" />
