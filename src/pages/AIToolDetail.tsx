@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { useToast } from '@/hooks/use-toast';
 import { useApprovedTools } from '@/hooks/useApprovedTools';
+import { useTools } from '@/contexts/ToolsContext';
 import { 
   ArrowLeft, 
   Star, 
@@ -25,6 +26,7 @@ const AIToolDetail = () => {
   const { addToFavorites, removeFromFavorites, isFavorite, addToSaved, removeFromSaved, isSaved } = useFavorites();
   const { toast } = useToast();
   const { getApprovedTools } = useApprovedTools();
+  const { tools } = useTools();
 
   // Récupérer les outils approuvés
   const approvedTools = getApprovedTools();
@@ -338,9 +340,12 @@ const AIToolDetail = () => {
     tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') === slug
   );
 
-  // Si trouvé dans les outils approuvés, utiliser ces données
+  // Si trouvé dans les outils approuvés, récupérer les données complètes depuis le contexte
   let currentTool;
   if (approvedTool) {
+    // Rechercher l'outil complet dans le contexte pour récupérer toutes les données du formulaire
+    const fullToolData = tools.find(tool => tool.id === approvedTool.id);
+    
     currentTool = {
       name: approvedTool.name,
       category: approvedTool.category === 'assistant-ia' ? 'Assistant IA' : 
@@ -350,15 +355,15 @@ const AIToolDetail = () => {
                 approvedTool.category === 'video' ? 'Vidéo' :
                 approvedTool.category === 'audio-musique' ? 'Audio' : 'Autre',
       description: approvedTool.description,
-      longDescription: approvedTool.description,
+      longDescription: fullToolData?.longDescription || approvedTool.description,
       rating: approvedTool.rating,
       users: approvedTool.users,
       website: approvedTool.link,
       pricing: approvedTool.price,
       image: approvedTool.image,
-      features: approvedTool.tags || [],
-      pros: ['Outil approuvé par la communauté'],
-      cons: ['En cours d\'évaluation']
+      features: fullToolData?.features || approvedTool.tags || [],
+      pros: fullToolData?.pros || ['Informations détaillées en cours de mise à jour'],
+      cons: fullToolData?.cons || ['Informations détaillées en cours de mise à jour']
     };
   } else {
     // Sinon, utiliser les données statiques
