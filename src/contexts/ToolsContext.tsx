@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { SubmittedTool } from '@/types/admin';
 
@@ -106,9 +105,11 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
       pros: ['Très précis', 'Supporte plusieurs langages'],
       cons: ['Consomme beaucoup de ressources'],
       tags: ['code', 'développement', 'programmation'],
-      status: 'pending',
+      status: 'approved',
       submittedBy: 'dev@example.com',
-      submittedAt: '2024-01-22T09:15:00Z'
+      submittedAt: '2024-01-22T09:15:00Z',
+      reviewedBy: 'auto-approved',
+      reviewedAt: '2024-01-22T09:15:00Z'
     }
   ]);
 
@@ -131,11 +132,14 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
     const newTool: SubmittedTool = {
       ...toolData,
       id: Date.now().toString(),
-      status: 'pending',
+      status: 'approved',
       submittedAt: new Date().toISOString(),
-      submittedBy: localStorage.getItem('userEmail') || 'utilisateur@example.com'
+      submittedBy: localStorage.getItem('userEmail') || 'utilisateur@example.com',
+      reviewedBy: 'auto-approved',
+      reviewedAt: new Date().toISOString()
     };
     
+    console.log('Nouvel outil ajouté:', newTool);
     setTools(prev => [newTool, ...prev]);
   };
 
