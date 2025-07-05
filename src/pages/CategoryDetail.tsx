@@ -20,7 +20,8 @@ const staticToolsByCategory = {
       price: 'Freemium',
       rating: 4.8,
       users: '100M+',
-      tags: ['Conversation', 'Assistance', 'Productivité']
+      tags: ['Conversation', 'Assistance', 'Productivité'],
+      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop'
     },
     {
       id: 'claude-static',
@@ -31,7 +32,8 @@ const staticToolsByCategory = {
       price: 'Freemium',
       rating: 4.7,
       users: '10M+',
-      tags: ['Analyse', 'Rédaction', 'Code']
+      tags: ['Analyse', 'Rédaction', 'Code'],
+      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop'
     }
   ],
   'developpement': [
@@ -44,7 +46,8 @@ const staticToolsByCategory = {
       price: 'Payant',
       rating: 4.5,
       users: '5M+',
-      tags: ['Développement', 'Autocomplétion', 'Productivité']
+      tags: ['Développement', 'Autocomplétion', 'Productivité'],
+      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop'
     }
   ],
   'redaction': [
@@ -57,7 +60,8 @@ const staticToolsByCategory = {
       price: 'Payant',
       rating: 4.5,
       users: '1M+',
-      tags: ['Marketing', 'Copywriting', 'Contenu']
+      tags: ['Marketing', 'Copywriting', 'Contenu'],
+      image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop'
     }
   ],
   'chat-communication': [
@@ -70,7 +74,8 @@ const staticToolsByCategory = {
       price: 'Freemium',
       rating: 4.2,
       users: '10M+',
-      tags: ['Compagnon', 'Émotionnel', 'Personnel']
+      tags: ['Compagnon', 'Émotionnel', 'Personnel'],
+      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop'
     }
   ],
   'image-design': [
@@ -83,7 +88,8 @@ const staticToolsByCategory = {
       price: 'Payant',
       rating: 4.9,
       users: '15M+',
-      tags: ['Art', 'Design', 'Illustration']
+      tags: ['Art', 'Design', 'Illustration'],
+      image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop'
     }
   ],
   'audio-musique': [
@@ -96,7 +102,8 @@ const staticToolsByCategory = {
       price: 'Freemium',
       rating: 4.6,
       users: '1M+',
-      tags: ['Musique', 'Paroles', 'Génération']
+      tags: ['Musique', 'Paroles', 'Génération'],
+      image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop'
     }
   ],
   'video': [
@@ -109,7 +116,8 @@ const staticToolsByCategory = {
       price: 'Freemium',
       rating: 4.6,
       users: '2M+',
-      tags: ['Montage', 'Effets', 'Génération']
+      tags: ['Montage', 'Effets', 'Génération'],
+      image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=300&fit=crop'
     }
   ],
   'analyse-calcul': [
@@ -122,7 +130,8 @@ const staticToolsByCategory = {
       price: 'Freemium',
       rating: 4.5,
       users: '10M+',
-      tags: ['Mathématiques', 'Calcul', 'Analyse']
+      tags: ['Mathématiques', 'Calcul', 'Analyse'],
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop'
     }
   ],
   'art-creativite': [
@@ -135,7 +144,8 @@ const staticToolsByCategory = {
       price: 'Freemium',
       rating: 4.5,
       users: '5M+',
-      tags: ['Adobe', 'Professionnel', 'Intégration']
+      tags: ['Adobe', 'Professionnel', 'Intégration'],
+      image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&h=300&fit=crop'
     }
   ]
 };
@@ -201,7 +211,23 @@ const CategoryDetailPage = () => {
                   
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
-                      <div className="text-3xl">{tool.logo}</div>
+                      <div className="flex items-center space-x-3">
+                        {tool.image ? (
+                          <img
+                            src={tool.image}
+                            alt={tool.name}
+                            className="w-12 h-12 rounded-lg object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg ${tool.image ? 'hidden' : ''}`}>
+                          {typeof tool.logo === 'string' && tool.logo.length === 1 ? tool.logo : tool.name.charAt(0)}
+                        </div>
+                      </div>
                       <div className="flex items-center space-x-1">
                         <Star className="h-4 w-4 text-yellow-400 fill-current" />
                         <span className="text-sm font-medium text-gray-900 dark:text-white">{tool.rating}</span>

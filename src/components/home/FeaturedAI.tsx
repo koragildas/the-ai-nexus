@@ -30,7 +30,7 @@ const staticFeaturedTools: FeaturedToolType[] = [
     rating: 4.8,
     reviews: 15240,
     price: 'Freemium',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop',
     featured: true
   },
   {
@@ -42,7 +42,7 @@ const staticFeaturedTools: FeaturedToolType[] = [
     rating: 4.9,
     reviews: 8950,
     price: 'Payant',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop',
     featured: true
   },
   {
@@ -54,7 +54,7 @@ const staticFeaturedTools: FeaturedToolType[] = [
     rating: 4.7,
     reviews: 12340,
     price: 'Payant',
-    image: '/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=300&fit=crop',
     featured: true
   }
 ];
@@ -80,7 +80,7 @@ export const FeaturedAI = () => {
     rating: tool.rating,
     reviews: parseInt(tool.users.replace(/[^\d]/g, '')) * 1000 || 1000,
     price: tool.price,
-    image: '/placeholder.svg',
+    image: tool.image || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=300&fit=crop',
     featured: true,
     isNewlyApproved: true
   }));
@@ -124,8 +124,20 @@ export const FeaturedAI = () => {
                 </div>
               )}
               
-              <div className="aspect-video bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+              <div className="aspect-video bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center overflow-hidden">
+                {tool.image ? (
+                  <img
+                    src={tool.image}
+                    alt={tool.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      target.nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : null}
+                <div className={`w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center ${tool.image ? 'hidden' : ''}`}>
                   <span className="text-white font-bold text-xl">
                     {tool.name.charAt(0)}
                   </span>

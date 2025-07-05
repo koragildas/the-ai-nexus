@@ -19,13 +19,13 @@ export interface PublicTool {
 }
 
 export const useApprovedTools = () => {
-  const { getToolsByStatus, getToolsByCategory, searchTools, tools } = useTools();
+  const { getToolsByStatus, tools } = useTools();
 
   const convertToPublicTool = (tool: SubmittedTool): PublicTool => ({
     id: tool.id,
     name: tool.name,
     description: tool.description,
-    logo: tool.name.charAt(0),
+    logo: tool.image || tool.name.charAt(0),
     link: tool.url,
     price: tool.pricing === 'free' ? 'Gratuit' : 
            tool.pricing === 'freemium' ? 'Freemium' : 
@@ -52,8 +52,13 @@ export const useApprovedTools = () => {
   };
 
   const searchApprovedTools = (query: string): PublicTool[] => {
-    const searchResults = searchTools(query);
-    return searchResults.map(convertToPublicTool);
+    const approvedTools = getApprovedTools();
+    const lowercaseQuery = query.toLowerCase();
+    return approvedTools.filter(tool => 
+      tool.name.toLowerCase().includes(lowercaseQuery) ||
+      tool.description.toLowerCase().includes(lowercaseQuery) ||
+      tool.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+    );
   };
 
   const getFeaturedTools = (): PublicTool[] => {
