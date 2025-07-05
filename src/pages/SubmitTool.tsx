@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
@@ -10,7 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { PlusCircle, Send, X, Plus } from 'lucide-react';
+import { ArrayInput } from '@/components/forms/ArrayInput';
+import { PlusCircle, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTools } from '@/contexts/ToolsContext';
 
@@ -103,9 +103,9 @@ const SubmitToolPage = () => {
     }, 2000);
   };
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
+  const handleInputChange = useCallback((field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
 
   const handleArrayChange = useCallback((field: keyof FormData, index: number, value: string) => {
     setFormData(prev => ({
@@ -129,55 +129,6 @@ const SubmitToolPage = () => {
       [field]: (prev[field] as string[]).filter((_: string, i: number) => i !== index)
     }));
   }, []);
-
-  const ArrayInput = ({ 
-    field, 
-    label, 
-    placeholder, 
-    description 
-  }: { 
-    field: keyof FormData; 
-    label: string; 
-    placeholder: string; 
-    description?: string; 
-  }) => (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      {description && <p className="text-sm text-muted-foreground">{description}</p>}
-      <div className="space-y-2">
-        {(formData[field] as string[]).map((item: string, index: number) => (
-          <div key={`${field}-${index}`} className="flex gap-2">
-            <Input
-              placeholder={placeholder}
-              value={item}
-              onChange={(e) => handleArrayChange(field, index, e.target.value)}
-              className="flex-1"
-            />
-            {(formData[field] as string[]).length > 1 && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => removeArrayItem(field, index)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        ))}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => addArrayItem(field)}
-          className="w-full"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Ajouter {label.toLowerCase()}
-        </Button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen gradient-bg">
@@ -356,6 +307,10 @@ const SubmitToolPage = () => {
                     label="Fonctionnalités principales"
                     placeholder="Ex: Génération de texte avancée"
                     description="Listez les principales fonctionnalités de l'outil"
+                    values={formData.features}
+                    onChange={(index, value) => handleArrayChange('features', index, value)}
+                    onAdd={() => addArrayItem('features')}
+                    onRemove={(index) => removeArrayItem('features', index)}
                   />
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -364,6 +319,10 @@ const SubmitToolPage = () => {
                       label="Avantages"
                       placeholder="Ex: Interface intuitive"
                       description="Points forts de l'outil"
+                      values={formData.pros}
+                      onChange={(index, value) => handleArrayChange('pros', index, value)}
+                      onAdd={() => addArrayItem('pros')}
+                      onRemove={(index) => removeArrayItem('pros', index)}
                     />
 
                     <ArrayInput
@@ -371,6 +330,10 @@ const SubmitToolPage = () => {
                       label="Inconvénients"
                       placeholder="Ex: Prix élevé"
                       description="Limitations ou points faibles"
+                      values={formData.cons}
+                      onChange={(index, value) => handleArrayChange('cons', index, value)}
+                      onAdd={() => addArrayItem('cons')}
+                      onRemove={(index) => removeArrayItem('cons', index)}
                     />
                   </div>
 
@@ -379,6 +342,10 @@ const SubmitToolPage = () => {
                     label="Tags/Mots-clés"
                     placeholder="Ex: IA, Génératif, Créatif"
                     description="Mots-clés pour faciliter la recherche"
+                    values={formData.tags}
+                    onChange={(index, value) => handleArrayChange('tags', index, value)}
+                    onAdd={() => addArrayItem('tags')}
+                    onRemove={(index) => removeArrayItem('tags', index)}
                   />
                 </div>
 
