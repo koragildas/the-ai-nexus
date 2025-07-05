@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { SubmittedTool } from '@/types/admin';
 
@@ -132,14 +133,14 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
     const newTool: SubmittedTool = {
       ...toolData,
       id: Date.now().toString(),
-      status: 'approved',
+      status: 'approved', // Auto-approuver les nouveaux outils
       submittedAt: new Date().toISOString(),
       submittedBy: localStorage.getItem('userEmail') || 'utilisateur@example.com',
       reviewedBy: 'auto-approved',
       reviewedAt: new Date().toISOString()
     };
     
-    console.log('Nouvel outil ajouté:', newTool);
+    console.log('Nouvel outil ajouté avec catégorie:', newTool.category, newTool);
     setTools(prev => [newTool, ...prev]);
   };
 
@@ -166,7 +167,9 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
   };
 
   const getToolsByStatus = (status: 'pending' | 'approved' | 'rejected') => {
-    return tools.filter(tool => tool.status === status);
+    const filteredTools = tools.filter(tool => tool.status === status);
+    console.log(`Outils avec statut ${status}:`, filteredTools.length);
+    return filteredTools;
   };
 
   const getToolsByCategory = (category: string) => {

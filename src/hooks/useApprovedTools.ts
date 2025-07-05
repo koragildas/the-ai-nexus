@@ -18,20 +18,22 @@ export interface PublicTool {
   image?: string;
 }
 
-// Mapping des catégories du formulaire vers les catégories d'affichage
+// Mapping correct des catégories du formulaire vers les catégories d'affichage
 const categoryMapping = {
-  'writing': 'redaction',
-  'image': 'image-design',
-  'business': 'analyse-calcul',
-  'chatbots': 'assistant-ia',
   'assistant-ia': 'assistant-ia',
-  'developpement': 'developpement',
+  'developpement': 'developpement', 
   'redaction': 'redaction',
   'chat-communication': 'chat-communication',
   'image-design': 'image-design',
   'audio-musique': 'audio-musique',
   'video': 'video',
-  'analyse-calcul': 'analyse-calcul'
+  'analyse-calcul': 'analyse-calcul',
+  'art-creativite': 'art-creativite',
+  // Anciens mappings pour compatibilité
+  'writing': 'redaction',
+  'image': 'image-design',
+  'business': 'analyse-calcul',
+  'chatbots': 'assistant-ia'
 };
 
 export const useApprovedTools = () => {
@@ -40,6 +42,8 @@ export const useApprovedTools = () => {
   const convertToPublicTool = (tool: SubmittedTool): PublicTool => {
     // Mapper la catégorie du formulaire vers la catégorie d'affichage
     const mappedCategory = categoryMapping[tool.category as keyof typeof categoryMapping] || tool.category;
+    
+    console.log(`Outil ${tool.name} - Catégorie originale: ${tool.category}, Catégorie mappée: ${mappedCategory}`);
     
     return {
       id: tool.id,
@@ -62,12 +66,15 @@ export const useApprovedTools = () => {
 
   const getApprovedTools = (): PublicTool[] => {
     const approvedTools = getToolsByStatus('approved');
+    console.log('Outils approuvés trouvés:', approvedTools.length);
     return approvedTools.map(convertToPublicTool);
   };
 
   const getApprovedToolsByCategory = (categorySlug: string): PublicTool[] => {
     const approvedTools = getApprovedTools();
-    return approvedTools.filter(tool => tool.category === categorySlug);
+    const filteredTools = approvedTools.filter(tool => tool.category === categorySlug);
+    console.log(`Outils trouvés pour la catégorie ${categorySlug}:`, filteredTools.length);
+    return filteredTools;
   };
 
   const searchApprovedTools = (query: string): PublicTool[] => {
