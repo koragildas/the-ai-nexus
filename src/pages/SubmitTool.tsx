@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
@@ -147,12 +146,11 @@ const SubmitToolPage = () => {
       <div className="space-y-2">
         {(formData[field] as string[]).map((item: string, index: number) => (
           <div key={index} className="flex gap-2">
-            <Textarea
+            <Input
               placeholder={placeholder}
               value={item}
               onChange={(e) => handleArrayChange(field, index, e.target.value)}
               className="flex-1"
-              rows={2}
             />
             {(formData[field] as string[]).length > 1 && (
               <Button
