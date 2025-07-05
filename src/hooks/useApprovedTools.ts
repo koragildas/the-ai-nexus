@@ -15,10 +15,11 @@ export interface PublicTool {
   category: string;
   featured?: boolean;
   trending?: boolean;
+  image?: string;
 }
 
 export const useApprovedTools = () => {
-  const { getToolsByStatus, getToolsByCategory, searchTools } = useTools();
+  const { getToolsByStatus, getToolsByCategory, searchTools, tools } = useTools();
 
   const convertToPublicTool = (tool: SubmittedTool): PublicTool => ({
     id: tool.id,
@@ -34,7 +35,8 @@ export const useApprovedTools = () => {
     tags: tool.tags,
     category: tool.category,
     featured: false,
-    trending: false
+    trending: false,
+    image: tool.image
   });
 
   const getApprovedTools = (): PublicTool[] => {
@@ -43,8 +45,10 @@ export const useApprovedTools = () => {
   };
 
   const getApprovedToolsByCategory = (category: string): PublicTool[] => {
-    const categoryTools = getToolsByCategory(category);
-    return categoryTools.map(convertToPublicTool);
+    const approvedTools = tools.filter(tool => 
+      tool.status === 'approved' && tool.category === category
+    );
+    return approvedTools.map(convertToPublicTool);
   };
 
   const searchApprovedTools = (query: string): PublicTool[] => {
@@ -54,7 +58,6 @@ export const useApprovedTools = () => {
 
   const getFeaturedTools = (): PublicTool[] => {
     const approvedTools = getApprovedTools();
-    // Prendre les 3 premiers outils approuvés comme vedettes
     return approvedTools.slice(0, 3).map(tool => ({
       ...tool,
       featured: true
@@ -63,7 +66,6 @@ export const useApprovedTools = () => {
 
   const getTrendingTools = (): PublicTool[] => {
     const approvedTools = getApprovedTools();
-    // Prendre les outils avec les meilleures notes comme tendances
     return approvedTools
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 5)

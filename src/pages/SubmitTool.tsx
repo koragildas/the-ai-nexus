@@ -9,9 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { PlusCircle, Send, X, Plus, CheckCircle2 } from 'lucide-react';
+import { PlusCircle, Send, X, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTools } from '@/contexts/ToolsContext';
 
@@ -62,18 +61,14 @@ const SubmitToolPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation des champs requis
     if (!formData.name || !formData.description || !formData.url || !formData.category || !formData.pricing) {
       toast.error("Veuillez remplir tous les champs obligatoires.");
       return;
     }
 
     setIsSubmitting(true);
-
-    // Simulate submission delay for better UX
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Filtrer les éléments vides des tableaux
     const cleanedData = {
       ...formData,
       features: formData.features.filter(f => f.trim() !== ''),
@@ -82,12 +77,10 @@ const SubmitToolPage = () => {
       tags: formData.tags.filter(t => t.trim() !== '')
     };
 
-    // Ajouter l'outil via le contexte
     addTool(cleanedData);
     
     toast.success("Outil soumis avec succès ! Votre suggestion sera examinée par notre équipe.");
     
-    // Reset du formulaire
     setFormData({
       name: '',
       description: '',
@@ -105,8 +98,6 @@ const SubmitToolPage = () => {
     });
 
     setIsSubmitting(false);
-
-    // Redirection vers le tableau de bord après soumission
     setTimeout(() => {
       navigate('/dashboard');
     }, 2000);
@@ -155,12 +146,13 @@ const SubmitToolPage = () => {
       {description && <p className="text-sm text-muted-foreground">{description}</p>}
       <div className="space-y-2">
         {(formData[field] as string[]).map((item: string, index: number) => (
-          <div key={index} className="flex gap-2 group animate-fade-in">
-            <Input
+          <div key={index} className="flex gap-2">
+            <Textarea
               placeholder={placeholder}
               value={item}
               onChange={(e) => handleArrayChange(field, index, e.target.value)}
-              className="flex-1 transition-all duration-200 focus:scale-[1.01] focus:shadow-md"
+              className="flex-1"
+              rows={2}
             />
             {(formData[field] as string[]).length > 1 && (
               <Button
@@ -168,7 +160,6 @@ const SubmitToolPage = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => removeArrayItem(field, index)}
-                className="opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-105 hover:bg-destructive hover:text-destructive-foreground"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -180,9 +171,9 @@ const SubmitToolPage = () => {
           variant="outline"
           size="sm"
           onClick={() => addArrayItem(field)}
-          className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
+          className="w-full"
         >
-          <Plus className="h-4 w-4 mr-2 transition-transform duration-200 group-hover:rotate-90" />
+          <Plus className="h-4 w-4 mr-2" />
           Ajouter {label.toLowerCase()}
         </Button>
       </div>
@@ -194,8 +185,8 @@ const SubmitToolPage = () => {
       <Header />
       <main className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 animate-fade-in">
-            <div className="inline-flex items-center px-4 py-2 glass-effect rounded-full text-sm font-medium mb-4 hover:scale-105 transition-transform duration-200">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-4 py-2 glass-effect rounded-full text-sm font-medium mb-4">
               <PlusCircle className="h-4 w-4 mr-2" />
               Soumettre un outil
             </div>
@@ -207,7 +198,7 @@ const SubmitToolPage = () => {
             </p>
           </div>
 
-          <Card className="glass-effect animate-slide-up hover:shadow-xl transition-all duration-300">
+          <Card className="glass-effect">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 Informations complètes sur l'outil
@@ -220,25 +211,23 @@ const SubmitToolPage = () => {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Image de l'outil */}
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6">
                   <h3 className="text-lg font-semibold text-foreground">Image de l'outil</h3>
                   <div className="space-y-2">
                     <Label>Logo ou capture d'écran de l'outil</Label>
                     <p className="text-sm text-muted-foreground">
                       Ajoutez une image représentative de l'outil (logo, interface, etc.)
                     </p>
-                    <div className="transform transition-all duration-200 hover:scale-[1.01]">
-                      <ImageUpload
-                        value={formData.image}
-                        onChange={(value) => handleInputChange('image', value)}
-                        onRemove={() => handleInputChange('image', '')}
-                      />
-                    </div>
+                    <ImageUpload
+                      value={formData.image}
+                      onChange={(value) => handleInputChange('image', value)}
+                      onRemove={() => handleInputChange('image', '')}
+                    />
                   </div>
                 </div>
 
                 {/* Informations de base */}
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6">
                   <h3 className="text-lg font-semibold text-foreground">Informations de base</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -250,7 +239,6 @@ const SubmitToolPage = () => {
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         required
-                        className="transition-all duration-200 focus:scale-[1.01] focus:shadow-md"
                       />
                     </div>
 
@@ -263,7 +251,6 @@ const SubmitToolPage = () => {
                         value={formData.url}
                         onChange={(e) => handleInputChange('url', e.target.value)}
                         required
-                        className="transition-all duration-200 focus:scale-[1.01] focus:shadow-md"
                       />
                     </div>
                   </div>
@@ -277,7 +264,6 @@ const SubmitToolPage = () => {
                       onChange={(e) => handleInputChange('description', e.target.value)}
                       required
                       rows={2}
-                      className="transition-all duration-200 focus:scale-[1.01] focus:shadow-md resize-none"
                     />
                   </div>
 
@@ -289,23 +275,22 @@ const SubmitToolPage = () => {
                       value={formData.longDescription}
                       onChange={(e) => handleInputChange('longDescription', e.target.value)}
                       rows={4}
-                      className="transition-all duration-200 focus:scale-[1.01] focus:shadow-md resize-none"
                     />
                   </div>
                 </div>
 
                 {/* Catégorisation */}
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6">
                   <h3 className="text-lg font-semibold text-foreground">Catégorisation</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
                       <Label>Catégorie *</Label>
                       <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
-                        <SelectTrigger className="transition-all duration-200 hover:scale-[1.01] focus:scale-[1.01]">
+                        <SelectTrigger>
                           <SelectValue placeholder="Sélectionner une catégorie" />
                         </SelectTrigger>
-                        <SelectContent className="bg-background/95 backdrop-blur-sm">
+                        <SelectContent>
                           <SelectItem value="assistant-ia">Assistant IA</SelectItem>
                           <SelectItem value="developpement">Développement</SelectItem>
                           <SelectItem value="redaction">Rédaction</SelectItem>
@@ -322,10 +307,10 @@ const SubmitToolPage = () => {
                     <div className="space-y-2">
                       <Label>Prix *</Label>
                       <Select value={formData.pricing} onValueChange={(value) => handleInputChange('pricing', value)}>
-                        <SelectTrigger className="transition-all duration-200 hover:scale-[1.01] focus:scale-[1.01]">
+                        <SelectTrigger>
                           <SelectValue placeholder="Modèle de prix" />
                         </SelectTrigger>
-                        <SelectContent className="bg-background/95 backdrop-blur-sm">
+                        <SelectContent>
                           <SelectItem value="free">Gratuit</SelectItem>
                           <SelectItem value="freemium">Freemium</SelectItem>
                           <SelectItem value="paid">Payant</SelectItem>
@@ -340,7 +325,6 @@ const SubmitToolPage = () => {
                         placeholder="Ex: 100M+, 5M+, 1M+..."
                         value={formData.users}
                         onChange={(e) => handleInputChange('users', e.target.value)}
-                        className="transition-all duration-200 focus:scale-[1.01] focus:shadow-md"
                       />
                     </div>
                   </div>
@@ -348,10 +332,10 @@ const SubmitToolPage = () => {
                   <div className="space-y-2">
                     <Label htmlFor="rating">Note (sur 5)</Label>
                     <Select value={formData.rating} onValueChange={(value) => handleInputChange('rating', value)}>
-                      <SelectTrigger className="transition-all duration-200 hover:scale-[1.01] focus:scale-[1.01]">
+                      <SelectTrigger>
                         <SelectValue placeholder="Sélectionner une note" />
                       </SelectTrigger>
-                      <SelectContent className="bg-background/95 backdrop-blur-sm">
+                      <SelectContent>
                         <SelectItem value="5.0">5.0 - Excellent</SelectItem>
                         <SelectItem value="4.9">4.9 - Très bon</SelectItem>
                         <SelectItem value="4.8">4.8 - Très bon</SelectItem>
@@ -365,7 +349,7 @@ const SubmitToolPage = () => {
                 </div>
 
                 {/* Fonctionnalités */}
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6">
                   <h3 className="text-lg font-semibold text-foreground">Caractéristiques détaillées</h3>
                   
                   <ArrayInput
@@ -402,7 +386,7 @@ const SubmitToolPage = () => {
                 <div className="pt-6 border-t">
                   <Button 
                     type="submit" 
-                    className="w-full btn-primary transition-all duration-300 hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
+                    className="w-full btn-primary" 
                     size="lg"
                     disabled={isSubmitting}
                   >
@@ -414,7 +398,7 @@ const SubmitToolPage = () => {
                     ) : (
                       <>
                         Soumettre l'outil complet
-                        <Send className="ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                        <Send className="ml-2 h-4 w-4" />
                       </>
                     )}
                   </Button>

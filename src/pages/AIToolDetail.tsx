@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { useToast } from '@/hooks/use-toast';
+import { useApprovedTools } from '@/hooks/useApprovedTools';
 import { 
   ArrowLeft, 
   Star, 
@@ -15,7 +16,6 @@ import {
   Heart, 
   Bookmark,
   Users,
-  Calendar,
   Globe,
   Zap
 } from 'lucide-react';
@@ -24,7 +24,11 @@ const AIToolDetail = () => {
   const { slug } = useParams();
   const { addToFavorites, removeFromFavorites, isFavorite, addToSaved, removeFromSaved, isSaved } = useFavorites();
   const { toast } = useToast();
+  const { getApprovedTools } = useApprovedTools();
 
+  // Récupérer les outils approuvés
+  const approvedTools = getApprovedTools();
+  
   // Base de données complète d'outils IA avec toutes leurs informations détaillées
   const toolData = {
     'chatgpt': {
@@ -36,6 +40,7 @@ const AIToolDetail = () => {
       users: '100M+',
       website: 'https://chat.openai.com',
       pricing: 'Freemium',
+      image: '/placeholder.svg',
       features: [
         'Conversations naturelles en temps réel',
         'Génération de contenu créatif',
@@ -65,6 +70,7 @@ const AIToolDetail = () => {
       users: '10M+',
       website: 'https://claude.ai',
       pricing: 'Freemium',
+      image: '/placeholder.svg',
       features: [
         'Analyse de documents longs',
         'Programmation avancée',
@@ -94,6 +100,7 @@ const AIToolDetail = () => {
       users: '15M+',
       website: 'https://midjourney.com',
       pricing: 'Payant',
+      image: '/placeholder.svg',
       features: [
         'Génération d\'images haute qualité',
         'Styles artistiques variés',
@@ -123,6 +130,7 @@ const AIToolDetail = () => {
       users: '5M+',
       website: 'https://github.com/features/copilot',
       pricing: 'Payant',
+      image: '/placeholder.svg',
       features: [
         'Autocomplétion de code intelligente',
         'Support multi-langages',
@@ -152,6 +160,7 @@ const AIToolDetail = () => {
       users: '1M+',
       website: 'https://jasper.ai',
       pricing: 'Payant',
+      image: '/placeholder.svg',
       features: [
         'Templates marketing prêts',
         'Optimisation SEO',
@@ -181,6 +190,7 @@ const AIToolDetail = () => {
       users: '10M+',
       website: 'https://openai.com/dall-e-3',
       pricing: 'Payant',
+      image: '/placeholder.svg',
       features: [
         'Génération haute résolution',
         'Compréhension contextuelle',
@@ -210,6 +220,7 @@ const AIToolDetail = () => {
       users: '1M+',
       website: 'https://suno.com',
       pricing: 'Freemium',
+      image: '/placeholder.svg',
       features: [
         'Génération de chansons complètes',
         'Création de paroles automatique',
@@ -239,6 +250,7 @@ const AIToolDetail = () => {
       users: '2M+',
       website: 'https://runwayml.com',
       pricing: 'Freemium',
+      image: '/placeholder.svg',
       features: [
         'Génération vidéo text-to-video',
         'Effets spéciaux IA',
@@ -268,6 +280,7 @@ const AIToolDetail = () => {
       users: '10M+',
       website: 'https://wolframalpha.com',
       pricing: 'Freemium',
+      image: '/placeholder.svg',
       features: [
         'Calculs mathématiques avancés',
         'Analyse statistique',
@@ -297,6 +310,7 @@ const AIToolDetail = () => {
       users: '5M+',
       website: 'https://firefly.adobe.com',
       pricing: 'Freemium',
+      image: '/placeholder.svg',
       features: [
         'Intégration Creative Cloud',
         'Génération d\'images',
@@ -319,7 +333,37 @@ const AIToolDetail = () => {
     }
   };
 
-  const currentTool = toolData[slug as keyof typeof toolData];
+  // Chercher d'abord dans les outils approuvés
+  const approvedTool = approvedTools.find(tool => 
+    tool.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') === slug
+  );
+
+  // Si trouvé dans les outils approuvés, utiliser ces données
+  let currentTool;
+  if (approvedTool) {
+    currentTool = {
+      name: approvedTool.name,
+      category: approvedTool.category === 'assistant-ia' ? 'Assistant IA' : 
+                approvedTool.category === 'developpement' ? 'Code' :
+                approvedTool.category === 'redaction' ? 'Écriture' :
+                approvedTool.category === 'image-design' ? 'Image' :
+                approvedTool.category === 'video' ? 'Vidéo' :
+                approvedTool.category === 'audio-musique' ? 'Audio' : 'Autre',
+      description: approvedTool.description,
+      longDescription: approvedTool.description, // Utiliser la description comme description longue pour l'instant
+      rating: approvedTool.rating,
+      users: approvedTool.users,
+      website: approvedTool.link,
+      pricing: approvedTool.price,
+      image: approvedTool.image,
+      features: approvedTool.tags || [],
+      pros: ['Outil approuvé par la communauté'],
+      cons: ['En cours d\'évaluation']
+    };
+  } else {
+    // Sinon, utiliser les données statiques
+    currentTool = toolData[slug as keyof typeof toolData];
+  }
 
   const handleFavoriteToggle = () => {
     if (!slug) return;
@@ -399,11 +443,19 @@ const AIToolDetail = () => {
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
               <div className="flex-1">
                 <div className="flex items-center mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
-                    <span className="text-white font-bold text-xl">
-                      {currentTool.name.charAt(0)}
-                    </span>
-                  </div>
+                  {currentTool.image && currentTool.image !== '/placeholder.svg' ? (
+                    <img 
+                      src={currentTool.image} 
+                      alt={currentTool.name}
+                      className="w-16 h-16 rounded-xl mr-4 object-cover"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
+                      <span className="text-white font-bold text-xl">
+                        {currentTool.name.charAt(0)}
+                      </span>
+                    </div>
+                  )}
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{currentTool.name}</h1>
                     <div className="flex items-center space-x-4">
@@ -424,7 +476,10 @@ const AIToolDetail = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-3 mb-6">
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  <Button 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    onClick={() => window.open(currentTool.website, '_blank')}
+                  >
                     <ExternalLink className="mr-2 h-4 w-4" />
                     Essayer {currentTool.name}
                   </Button>
@@ -493,27 +548,29 @@ const AIToolDetail = () => {
               </Card>
 
               {/* Fonctionnalités */}
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-gray-900 dark:text-white">
-                    <Zap className="mr-2 h-5 w-5" />
-                    Fonctionnalités principales
-                  </CardTitle>
-                  <CardDescription className="text-gray-600 dark:text-gray-300">
-                    Découvrez ce que {currentTool.name} peut faire pour vous
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {currentTool.features.map((feature, index) => (
-                      <div key={index} className="flex items-start">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              {currentTool.features && currentTool.features.length > 0 && (
+                <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-gray-900 dark:text-white">
+                      <Zap className="mr-2 h-5 w-5" />
+                      Fonctionnalités principales
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 dark:text-gray-300">
+                      Découvrez ce que {currentTool.name} peut faire pour vous
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {currentTool.features.map((feature, index) => (
+                        <div key={index} className="flex items-start">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Avantages et Inconvénients */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -556,7 +613,7 @@ const AIToolDetail = () => {
               {/* Informations de l'outil */}
               <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">Informations</CardTitle>
+                  <CardTitle className="text-gray-900 dark:text-white">Informations</CardHeader>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
@@ -593,38 +650,6 @@ const AIToolDetail = () => {
                     title={`Découvrez ${currentTool.name}`}
                     description={currentTool.description}
                   />
-                </CardContent>
-              </Card>
-
-              {/* Outils similaires */}
-              <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">Outils similaires</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {Object.entries(toolData)
-                      .filter(([toolSlug]) => toolSlug !== slug)
-                      .slice(0, 3)
-                      .map(([toolSlug, tool]) => (
-                        <Link key={toolSlug} to={`/outils/${toolSlug}`} className="block">
-                          <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-                              <span className="text-white font-bold text-sm">
-                                {tool.name.charAt(0)}
-                              </span>
-                            </div>
-                            <div className="flex-1">
-                              <h4 className="font-medium text-sm text-gray-900 dark:text-white">{tool.name}</h4>
-                              <div className="flex items-center">
-                                <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                                <span className="text-xs text-gray-600 dark:text-gray-400">{tool.rating}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
-                  </div>
                 </CardContent>
               </Card>
             </div>
