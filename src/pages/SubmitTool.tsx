@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -106,28 +107,28 @@ const SubmitToolPage = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleArrayChange = (field: keyof FormData, index: number, value: string) => {
+  const handleArrayChange = useCallback((field: keyof FormData, index: number, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: (prev[field] as string[]).map((item: string, i: number) => 
         i === index ? value : item
       )
     }));
-  };
+  }, []);
 
-  const addArrayItem = (field: keyof FormData) => {
+  const addArrayItem = useCallback((field: keyof FormData) => {
     setFormData(prev => ({
       ...prev,
       [field]: [...(prev[field] as string[]), '']
     }));
-  };
+  }, []);
 
-  const removeArrayItem = (field: keyof FormData, index: number) => {
+  const removeArrayItem = useCallback((field: keyof FormData, index: number) => {
     setFormData(prev => ({
       ...prev,
       [field]: (prev[field] as string[]).filter((_: string, i: number) => i !== index)
     }));
-  };
+  }, []);
 
   const ArrayInput = ({ 
     field, 
@@ -145,7 +146,7 @@ const SubmitToolPage = () => {
       {description && <p className="text-sm text-muted-foreground">{description}</p>}
       <div className="space-y-2">
         {(formData[field] as string[]).map((item: string, index: number) => (
-          <div key={index} className="flex gap-2">
+          <div key={`${field}-${index}`} className="flex gap-2">
             <Input
               placeholder={placeholder}
               value={item}
