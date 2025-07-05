@@ -111,6 +111,48 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
       submittedAt: '2024-01-22T09:15:00Z',
       reviewedBy: 'auto-approved',
       reviewedAt: '2024-01-22T09:15:00Z'
+    },
+    {
+      id: '5',
+      name: 'ChatBot Smart',
+      description: 'Chatbot intelligent pour le service client',
+      longDescription: 'Un chatbot avancé qui peut répondre aux questions des clients de manière naturelle et efficace.',
+      url: 'https://chatbot-smart.com',
+      category: 'chat-communication',
+      pricing: 'freemium',
+      rating: '4.3',
+      users: '30K+',
+      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop',
+      features: ['Réponses automatiques', 'Intégration multiplateforme', 'Apprentissage continu'],
+      pros: ['Facile à configurer', 'Très réactif'],
+      cons: ['Limité en version gratuite'],
+      tags: ['chatbot', 'service client', 'automatisation'],
+      status: 'approved',
+      submittedBy: 'support@example.com',
+      submittedAt: '2024-01-23T11:00:00Z',
+      reviewedBy: 'admin@ainexus.com',
+      reviewedAt: '2024-01-23T12:00:00Z'
+    },
+    {
+      id: '6',
+      name: 'Music AI Composer',
+      description: 'Compositeur de musique alimenté par IA',
+      longDescription: 'Créez des compositions musicales originales dans différents styles avec l\'aide de l\'intelligence artificielle.',
+      url: 'https://music-ai-composer.com',
+      category: 'audio-musique',
+      pricing: 'paid',
+      rating: '4.5',
+      users: '15K+',
+      image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop',
+      features: ['Composition automatique', 'Styles multiples', 'Export haute qualité'],
+      pros: ['Très créatif', 'Qualité professionnelle'],
+      cons: ['Prix élevé', 'Courbe d\'apprentissage'],
+      tags: ['musique', 'composition', 'créativité'],
+      status: 'approved',
+      submittedBy: 'music@example.com',
+      submittedAt: '2024-01-24T14:00:00Z',
+      reviewedBy: 'admin@ainexus.com',
+      reviewedAt: '2024-01-24T15:00:00Z'
     }
   ]);
 
