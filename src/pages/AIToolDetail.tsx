@@ -350,7 +350,7 @@ const AIToolDetail = () => {
                 approvedTool.category === 'video' ? 'Vidéo' :
                 approvedTool.category === 'audio-musique' ? 'Audio' : 'Autre',
       description: approvedTool.description,
-      longDescription: approvedTool.description, // Utiliser la description comme description longue pour l'instant
+      longDescription: approvedTool.description,
       rating: approvedTool.rating,
       users: approvedTool.users,
       website: approvedTool.link,
@@ -613,7 +613,7 @@ const AIToolDetail = () => {
               {/* Informations de l'outil */}
               <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                 <CardHeader>
-                  <CardTitle className="text-gray-900 dark:text-white">Informations</CardHeader>
+                  <CardTitle className="text-gray-900 dark:text-white">Informations</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
