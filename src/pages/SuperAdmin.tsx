@@ -26,6 +26,7 @@ import { UserManagement } from '@/components/admin/UserManagement';
 import { ToolSubmissions } from '@/components/admin/ToolSubmissions';
 import { SystemSettings } from '@/components/admin/SystemSettings';
 import { PermissionManager } from '@/components/admin/PermissionManager';
+import { AdvancedSettings } from '@/components/admin/AdvancedSettings';
 
 const SuperAdminPage = () => {
   const { toast } = useToast();
@@ -131,19 +132,7 @@ const SuperAdminPage = () => {
             </TabsContent>
 
             <TabsContent value="settings" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Paramètres généraux</CardTitle>
-                  <CardDescription>
-                    Configuration avancée de la plateforme
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Interface de paramètres système en cours de développement...
-                  </p>
-                </CardContent>
-              </Card>
+              <AdvancedSettings />
             </TabsContent>
           </Tabs>
         </div>
