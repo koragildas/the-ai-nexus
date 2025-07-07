@@ -163,7 +163,7 @@ const categoryNames = {
 };
 
 const CategoryDetailPage = () => {
-  const { categorySlug } = useParams();
+  const { slug: categorySlug } = useParams();
   const { getApprovedToolsByCategory } = useApprovedTools();
   
   // Récupérer les outils approuvés pour cette catégorie

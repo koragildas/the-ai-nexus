@@ -112,7 +112,7 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
       reviewedBy: 'auto-approved',
       reviewedAt: '2024-01-22T09:15:00Z'
     },
-    {
+        {
       id: '5',
       name: 'ChatBot Smart',
       description: 'Chatbot intelligent pour le service client',
@@ -153,6 +153,69 @@ export const ToolsProvider: React.FC<ToolsProviderProps> = ({ children }) => {
       submittedAt: '2024-01-24T14:00:00Z',
       reviewedBy: 'admin@ainexus.com',
       reviewedAt: '2024-01-24T15:00:00Z'
+    },
+    {
+      id: '7',
+      name: 'Video AI Editor',
+      description: 'Éditeur vidéo assisté par IA',
+      longDescription: 'Créez et éditez des vidéos professionnelles avec l\'aide de l\'intelligence artificielle.',
+      url: 'https://video-ai-editor.com',
+      category: 'video',
+      pricing: 'freemium',
+      rating: '4.4',
+      users: '20K+',
+      image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=300&fit=crop',
+      features: ['Montage automatique', 'Effets IA', 'Export 4K'],
+      pros: ['Interface intuitive', 'Résultats rapides'],
+      cons: ['Limité en version gratuite'],
+      tags: ['vidéo', 'montage', 'IA'],
+      status: 'approved',
+      submittedBy: 'video@example.com',
+      submittedAt: '2024-01-25T10:00:00Z',
+      reviewedBy: 'admin@ainexus.com',
+      reviewedAt: '2024-01-25T11:00:00Z'
+    },
+    {
+      id: '8',
+      name: 'Data AI Analyzer',
+      description: 'Analyseur de données intelligent',
+      longDescription: 'Analysez vos données avec des algorithmes d\'IA avancés pour obtenir des insights précieux.',
+      url: 'https://data-ai-analyzer.com',
+      category: 'analyse-calcul',
+      pricing: 'paid',
+      rating: '4.6',
+      users: '12K+',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+      features: ['Analyse prédictive', 'Visualisations', 'Rapports automatiques'],
+      pros: ['Très précis', 'Interface claire'],
+      cons: ['Prix élevé'],
+      tags: ['données', 'analyse', 'statistiques'],
+      status: 'approved',
+      submittedBy: 'data@example.com',
+      submittedAt: '2024-01-26T09:00:00Z',
+      reviewedBy: 'admin@ainexus.com',
+      reviewedAt: '2024-01-26T10:00:00Z'
+    },
+    {
+      id: '9',
+      name: 'Creative AI Studio',
+      description: 'Studio créatif assisté par IA',
+      longDescription: 'Créez des œuvres d\'art, logos et designs uniques avec notre suite créative IA.',
+      url: 'https://creative-ai-studio.com',
+      category: 'art-creativite',
+      pricing: 'freemium',
+      rating: '4.7',
+      users: '35K+',
+      image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&h=300&fit=crop',
+      features: ['Génération d\'art', 'Design de logos', 'Styles multiples'],
+      pros: ['Très créatif', 'Facile à utiliser'],
+      cons: ['Limité en version gratuite'],
+      tags: ['art', 'créativité', 'design'],
+      status: 'approved',
+      submittedBy: 'creative@example.com',
+      submittedAt: '2024-01-27T14:00:00Z',
+      reviewedBy: 'admin@ainexus.com',
+      reviewedAt: '2024-01-27T15:00:00Z'
     }
   ]);
 
