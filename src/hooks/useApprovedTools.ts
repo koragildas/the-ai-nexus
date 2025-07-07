@@ -72,8 +72,10 @@ export const useApprovedTools = () => {
 
   const getApprovedToolsByCategory = (categorySlug: string): PublicTool[] => {
     const approvedTools = getApprovedTools();
+    console.log('Tous les outils approuvés:', approvedTools.map(t => ({ name: t.name, category: t.category })));
     const filteredTools = approvedTools.filter(tool => tool.category === categorySlug);
-    console.log(`Outils trouvés pour la catégorie ${categorySlug}:`, filteredTools.length);
+    console.log(`Recherche catégorie: ${categorySlug}`);
+    console.log(`Outils trouvés pour la catégorie ${categorySlug}:`, filteredTools.length, filteredTools.map(t => t.name));
     return filteredTools;
   };
 

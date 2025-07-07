@@ -295,7 +295,7 @@ const CategoryDetailPage = () => {
               <p className="text-gray-500 dark:text-gray-400 text-lg">
                 Aucun outil disponible pour cette catégorie pour le moment.
               </p>
-              <Link to="/submit-tool" className="mt-4 inline-block">
+              <Link to="/soumettre" className="mt-4 inline-block">
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   Suggérer un outil
                 </Button>
