@@ -543,42 +543,295 @@ export const AdvancedSettings = () => {
 
         {/* Notifications */}
         <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Bell className="h-5 w-5 mr-2" />
-                Gestion des notifications
-              </CardTitle>
-              <CardDescription>
-                Configurer les notifications et templates d'email
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Interface de gestion des notifications en cours de développement...
-              </p>
-            </CardContent>
-          </Card>
+          <div className="grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Bell className="h-5 w-5 mr-2" />
+                  Templates d'email
+                </CardTitle>
+                <CardDescription>
+                  Gérer les templates d'email automatiques
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {emailTemplates.map(template => (
+                  <div key={template.id} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <h4 className="font-medium">{template.name}</h4>
+                        <p className="text-sm text-gray-500">Type: {template.type}</p>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4 mr-1" />
+                        Modifier
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      <div>
+                        <Label className="text-sm font-medium">Sujet:</Label>
+                        <p className="text-sm text-gray-600">{template.subject}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium">Contenu:</Label>
+                        <p className="text-sm text-gray-600 truncate">{template.content}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouveau template
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Mail className="h-5 w-5 mr-2" />
+                  Paramètres de notification
+                </CardTitle>
+                <CardDescription>
+                  Configuration des notifications système
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Notifications par email</Label>
+                    <p className="text-sm text-gray-500">Envoyer des notifications par email</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Notifications admin</Label>
+                    <p className="text-sm text-gray-500">Notifier les admins des nouvelles soumissions</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Notifications utilisateur</Label>
+                    <p className="text-sm text-gray-500">Notifier les utilisateurs des approbations</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="emailFrom">Email expéditeur</Label>
+                    <Input
+                      id="emailFrom"
+                      defaultValue="noreply@ainexus.com"
+                      placeholder="admin@example.com"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="emailName">Nom expéditeur</Label>
+                    <Input
+                      id="emailName"
+                      defaultValue="AI Nexus"
+                      placeholder="Votre plateforme"
+                    />
+                  </div>
+                </div>
+
+                <Button>
+                  <Save className="h-4 w-4 mr-2" />
+                  Sauvegarder les notifications
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Sécurité */}
         <TabsContent value="security" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Lock className="h-5 w-5 mr-2" />
-                Paramètres de sécurité
-              </CardTitle>
-              <CardDescription>
-                Configuration de la sécurité et des accès
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Interface de sécurité en cours de développement...
-              </p>
-            </CardContent>
-          </Card>
+          <div className="grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Lock className="h-5 w-5 mr-2" />
+                  Authentification et accès
+                </CardTitle>
+                <CardDescription>
+                  Contrôler les paramètres d'authentification
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Authentification à deux facteurs (2FA)</Label>
+                    <p className="text-sm text-gray-500">Obliger la 2FA pour les administrateurs</p>
+                  </div>
+                  <Switch />
+                </div>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Connexion par SSO</Label>
+                    <p className="text-sm text-gray-500">Autoriser la connexion via Google/GitHub</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Verrouillage après tentatives</Label>
+                    <p className="text-sm text-gray-500">Bloquer le compte après 5 tentatives</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="sessionDuration">Durée de session (heures)</Label>
+                    <Input
+                      id="sessionDuration"
+                      type="number"
+                      defaultValue="24"
+                      min="1"
+                      max="168"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="passwordMinLength">Longueur minimale mot de passe</Label>
+                    <Input
+                      id="passwordMinLength"
+                      type="number"
+                      defaultValue="8"
+                      min="6"
+                      max="32"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Shield className="h-5 w-5 mr-2" />
+                  Logs et monitoring
+                </CardTitle>
+                <CardDescription>
+                  Surveillance des activités système
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Logs d'audit</Label>
+                    <p className="text-sm text-gray-500">Enregistrer toutes les actions administratives</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Logs de connexion</Label>
+                    <p className="text-sm text-gray-500">Tracer les tentatives de connexion</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Alertes de sécurité</Label>
+                    <p className="text-sm text-gray-500">Notifications pour activités suspectes</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+
+                <div>
+                  <Label htmlFor="logRetention">Rétention des logs (jours)</Label>
+                  <Input
+                    id="logRetention"
+                    type="number"
+                    defaultValue="90"
+                    min="30"
+                    max="365"
+                    className="mt-1"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Key className="h-5 w-5 mr-2" />
+                  Clés API et accès
+                </CardTitle>
+                <CardDescription>
+                  Gestion des clés d'accès API
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">Clé API Admin</p>
+                      <p className="text-sm text-gray-500 font-mono">api_xxxxx...xxxxx</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="sm">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">Clé API Public</p>
+                      <p className="text-sm text-gray-500 font-mono">pub_xxxxx...xxxxx</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="sm">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Générer nouvelle clé
+                </Button>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <Label className="font-medium">Limitation de taux (requests/min)</Label>
+                    <p className="text-sm text-gray-500">Limiter les appels API par minute</p>
+                  </div>
+                  <Input
+                    type="number"
+                    defaultValue="1000"
+                    className="w-20"
+                    min="10"
+                    max="10000"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="flex justify-end">
+              <Button>
+                <Save className="h-4 w-4 mr-2" />
+                Sauvegarder la sécurité
+              </Button>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
